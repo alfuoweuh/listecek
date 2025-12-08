@@ -1,7 +1,9 @@
 # import sqlite3
 # conn = sqlite3.connect('výpravy.db')
 import jinja2
-from weasyprint import HTML
+from weasyprint import HTML, CSS
+from PIL import Image
+import io
 
 # Zadání dat
 zadat = input("Vlastní data (y/n)? ")
@@ -77,9 +79,6 @@ print("Lísteček pro tisk: 'listecek_tisk.html'")
 
 # Generování PNG obrázku ze stránkového HTML
 try:
-    from PIL import Image
-    import io
-    from weasyprint import CSS
     # Nejprve vygenerujeme PDF do paměti s minimálními okraji
     pdf_bytes = io.BytesIO()
     HTML(string=výstupní_html_stranky).write_pdf(
