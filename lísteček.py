@@ -34,9 +34,9 @@ else:
     jidlo = "dvě snídaně, dva obědy, jedna večeře; k volnému užití bude varná konvice a mikrovlnka, akorát sobotní oběd mladších / sobotní večeře a nedělní snídaně i oběd starších musí být studený"
     penize = "100 Kč; možná půjde dělat autíčka, to byste za něj zaplatili něco navíc; kolik, se ještě uvidí"
     kontakty = [
-        {"jmeno": "Vojta (starší)", "telefon": "739 287 724", "email": ""},
-        {"jmeno": "Myšák (mladší)", "telefon": "731 192 036", "email": ""},
-        {"jmeno": "Fred (starší)", "telefon": "778 597 126", "email": ""}
+        {"jmeno": "Vojta (starší)", "telefon": "739 287 724", "email": "xhurfr01@gjk.cz"},
+        {"jmeno": "Myšák (mladší)", "telefon": "731 192 036", "email": "fred@ctrnactka.cz"},
+        {"jmeno": "Fred (starší)", "telefon": "778 597 126", "email": "frederik.hurrle@gmail.com"}
     ]
 
 # Příprava dat pro tvorbu HTML lístečku
@@ -88,9 +88,20 @@ try:
     pdf_bytes.seek(0)
     # Konvertujeme PDF na PNG pomocí pdf2image
     from pdf2image import convert_from_bytes
-    images = convert_from_bytes(pdf_bytes.read(), first_page=1, last_page=1, dpi=96)
-    images[0].save("listecek_stranky.png")
+    images = convert_from_bytes(pdf_bytes.read(), first_page=1, last_page=1, dpi=150)
+    
+    # Automatické oříznutí bílého místa
+    image = images[0]
+    # Převedeme na odstíny šedi a invertujeme barvy (bílá -> černá, obsah -> bílá)
+    from PIL import ImageChops
+    inverted_image = ImageChops.invert(image.convert('L'))
+    # Získáme "bounding box" obsahu (všeho, co není černé)
+    bbox = inverted_image.getbbox()
+    if bbox:
+        image = image.crop(bbox)
+    image.save("listecek_stranky.png")
     print("PNG obrázek vytvořen: 'listecek_stranky.png'")
+
 except Exception as e:
     print(f"Chyba při vytváření PNG: {e}")
 
