@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="cs">
+<head>
+    <meta charset="UTF-8">
+    <title>Lísteček na stránky</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            color: #000;
+        }
+        
+        /* Hlavní kontejner */
+        .container {
+            width: 350px;
+            font-size: 12px;
+            display: inline-block;
+            border: 1px solid #000;
+            padding: 3px;
+        }
+
+        .header-img-container {
+            width: 100%;
+            border: 1px solid #000;
+            margin-bottom: 3px;
+            overflow: hidden;
+            aspect-ratio: 1 / 1;
+        }
+        .header-img {
+            display: block; 
+            width: 100%; 
+            height: 100%;
+            object-fit: cover;
+        }
+
+        /* Nadpis */
+        h1 {
+            text-align: center;
+            font-size: 20px;
+            font-weight: 900;
+            margin: 3px 0;
+            letter-spacing: 0.5px;
+            text-shadow: 0.5px 0.5px 0 #ccc;
+        }
+
+        /* Styl pro rámečky */
+        .box {
+            border: 1px solid #000;
+            padding: 3px;
+            margin-bottom: 3px;
+        }
+
+        /* Flexbox pro dvousloupcový řádek (sraz/návrat) */
+        .row {
+            display: flex;
+            gap: 3px;
+        }
+        
+        .col-half {
+            flex: 1;
+            border: 1px solid #000;
+            padding: 3px;
+            margin-bottom: 3px;
+        }
+
+        /* Typografie */
+        .label {
+            font-weight: bold;
+        }
+
+        p {
+            margin: 2px 0;
+            line-height: 1.2;
+        }
+
+        /* Sekce kontaktů dole */
+        .contacts {
+            margin-top: 3px;
+            font-style: italic;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        
+        <div class="header-img-container">
+            <img src="{{ header_path }}" alt="Obrázek záhlaví oddílu Skarabeus" class="header-img"> 
+        </div>
+
+        <h1>VÝPRAVA oddílu SKARABEUS</h1>
+
+        <div class="box">
+            <span class="label">výprava:</span> {{ nazev_vypravy }}
+        </div>
+        <div class="row">
+            <div class="col-half">
+                <div class="label">sraz:</div>
+                <div>{{ sraz_cas }}</div>
+                <div>{{ sraz_misto }}</div>
+            </div>
+            <div class="col-half">
+                <div class="label">návrat:</div>
+                <div>{{ rozchod_cas }}</div>
+                <div>{{ rozchod_misto }}</div>
+            </div>
+        </div>
+
+        <div class="box">
+            <p>
+                <span class="label">s sebou:</span> {{ s_sebou }}
+            </p>
+            <p>
+                <span class="label">jídlo:</span> {{ jidlo }}
+            </p>
+            <p>
+                <span class="label">peníze:</span> {{ penize }}
+            </p>
+
+            <div class="contacts">
+                {% for kontakt in kontakty %}
+                <div>{{ kontakt.jmeno }}: {{ kontakt.telefon }}, {{ kontakt.email }}</div>
+                {% endfor %}
+            </div>
+        </div>
+    </div>
+
+</body>
+</html>

@@ -1,0 +1,184 @@
+<!DOCTYPE html>
+<html lang="cs">
+<head>
+    <meta charset="UTF-8">
+    <title>Lísteček na tisk</title>
+    <style>
+        /* ====================================
+           STYLY PRO OBRAZOVKU (náhled)
+           ==================================== */
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px auto;
+            color: #000;
+            max-width: 600px;
+        }
+        .print-grid {
+             /* Na obrazovce zobrazíme jen jeden pro kontrolu */
+            display: block; 
+        }
+
+        /* ====================================
+           STYLY PRO TISK (A4 formát 2x2)
+           ==================================== */
+        @media print {
+            body {
+                margin: 0;
+                padding: 0;
+                /* Přesně velikost A4 */
+                width: 210mm; 
+                height: 297mm;
+                max-width: none;
+            }
+            .print-grid {
+                display: grid;
+                /* Rozložení 2 sloupce x 2 řádky */
+                grid-template-columns: repeat(2, 50%);
+                grid-template-rows: repeat(2, 50%);
+                width: 100%;
+                height: 100%;
+            }
+            .letacek {
+                /* Každý letáček zabírá přesně čtvrtinu stránky A4 */
+                width: 100%;
+                height: 100%;
+                box-sizing: border-box; /* Zajišťuje, že border a padding jsou uvnitř 50% */
+                padding: 5px; /* Vnitřní odsazení od okrajů čtvrtiny stránky */
+            }
+            
+            /* CSS pro minimalizaci okrajů prohlížeče při tisku */
+            @page {
+                margin: 0; 
+                size: A4;
+            }
+        }
+        
+        /* ====================================
+           STYLY LETÁKU (Stejné jako dříve, ale zmenšené)
+           ==================================== */
+        .letacek {
+             /* Důležité: Obal pro každý leták. Nastavte maximální šířku/výšku, aby se vešel */
+            overflow: hidden; 
+        }
+
+        .container {
+            border: 1px solid #000;
+            padding: 3px; /* Mírně zmenšený padding */
+            height: 98%; /* Zajistí, že rámeček letáku bude vidět */
+        }
+        
+        .header-img-container {
+            width: 100%;
+            border: 1px solid #000;
+            margin-bottom: 3px;
+            overflow: hidden;
+        }
+        .header-img {
+            display: block; 
+            width: 100%; 
+            height: auto; 
+        }
+
+        h1 {
+            text-align: center;
+            text-transform: uppercase;
+            font-size: 16px; /* Zmenšená velikost písma */
+            font-weight: 900;
+            margin: 5px 0;
+            letter-spacing: 0.5px;
+            text-shadow: 0.5px 0.5px 0 #ccc;
+        }
+
+        .box {
+            border: 1px solid #000;
+            padding: 3px; /* Zmenšený padding */
+            margin-bottom: 3px;
+        }
+
+        .row {
+            display: flex;
+            gap: 3px;
+        }
+        
+        .col-half {
+            flex: 1;
+            border: 1px solid #000;
+            padding: 3px;
+            margin-bottom: 3px;
+        }
+
+        .label {
+            font-weight: bold;
+        }
+
+        p {
+            margin: 3px 0; /* Zmenšený margin */
+            line-height: 1.2;
+            font-size: 11px; /* Důležité: Zmenšené písmo pro vejití se do čtvrtiny A4 */
+        }
+
+        .contacts {
+            margin-top: 5px;
+            font-style: italic;
+            font-size: 10px;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="print-grid">
+        
+        {% for i in range(4) %}
+        
+        <div class="letacek">
+            <div class="container">
+                
+                <div class="header-img-container">
+                    <img src="{{ header_path }}" alt="Obrázek záhlaví oddílu Skarabeus" class="header-img"> 
+                </div>
+
+                <h1>VÝPRAVA oddílu Skarabeus</h1>
+
+                <div class="box">
+                    <span class="label">výprava:</span> {{ nazev_vypravy }}
+                </div>
+                
+                <div class="row">
+                    <div class="col-half">
+                        <div class="label">sraz:</div>
+                        <div>{{ sraz_cas }}</div>
+                        <div>{{ sraz_misto }}</div>
+                    </div>
+                    <div class="col-half">
+                        <div class="label">návrat:</div>
+                        <div>{{ rozchod_cas }}</div>
+                        <div>{{ rozchod_misto }}</div>
+                    </div>
+                </div>
+
+                <div class="box">
+                    <p>
+                        <span class="label">s sebou:</span> {{ s_sebou }}
+                    </p>
+                    <p>
+                        <span class="label">jídlo:</span> {{ jidlo }}
+                    </p>
+                    <p>
+                        <span class="label">peníze:</span> {{ penize }}
+                    </p>
+
+                    <div class="contacts">
+                        {% for kontakt in kontakty %}
+                        <div>{{ kontakt.jmeno }}: {{ kontakt.telefon }}, {{ kontakt.email }}</div>
+                        {% endfor %}
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        {% endfor %}
+        
+    </div>
+
+</body>
+</html>
