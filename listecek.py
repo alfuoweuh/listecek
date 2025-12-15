@@ -6,7 +6,7 @@ from PIL import Image
 import io
 
 # Zadání dat
-zadat = input("Vlastní data (y/n)? ")
+zadat = input("Vlastní data (Y/n)? ")
 if zadat in ['y', 'Y', 'yes', 'YES']:
     název_výpravy = input("Název výpravy:")
     sraz_čas = input("Čas srazu:")
