@@ -1,12 +1,11 @@
-# import sqlite3
-# conn = sqlite3.connect('výpravy.db')
-import jinja2
-from weasyprint import HTML, CSS
-from PIL import Image
-import io
+#import sqlite3
+#conn = sqlite3.connect('výpravy.db')
 
 # Zadání dat
-zadat = input("Vlastní data (Y/n)? ")
+if True is False:
+    zadat = input("Vlastní data (Y/n)? ")
+else:
+    zadat = "n"
 if zadat in ['y', 'Y', 'yes', 'YES']:
     název_výpravy = input("Název výpravy:")
     sraz_čas = input("Čas srazu:")
@@ -41,14 +40,16 @@ else:
         {"jmeno": "Fred (starší)", "telefon": "778 597 126", "email": "frederik.hurrle@gmail.com"}
     ]
 
-# Příprava dat pro tvorbu HTML lístečku
-import os
+# Import knihoven
+import jinja2
+from weasyprint import HTML, CSS
+import io
 import base64
 
-# Převeď obrázek na base64 datový URL
-with open('header_skarabeus.jpg', 'rb') as f:
+# Převod obrázků na base64 datový URL
+with open('header_obrazek.jpg', 'rb') as f:
     image_data = base64.b64encode(f.read()).decode('utf-8')
-    header_path = f"data:image/jpeg;base64,{image_data}"
+    header_obrazek_path = f"data:image/jpeg;base64,{image_data}"
 
 with open('header_nazev.jpg', 'rb') as f:
     image_data_nazev = base64.b64encode(f.read()).decode('utf-8')
@@ -64,32 +65,33 @@ data = {
     "jidlo": jidlo,
     "penize": penize,
     "kontakty": kontakty,
-    "header_path": header_path,
+    "header_obrazek_path": header_obrazek_path,
     "header_nazev_path": header_nazev_path
 }
 
 env = jinja2.Environment(loader=jinja2.FileSystemLoader('.'))
 
 # Generování HTML lístečku na stránky
-výstupní_html_stranky = env.get_template('sablona_stranky.html').render(data)
+vystupní_html_stranky = env.get_template('sablona_stranky.html').render(data)
 with open("listecek_stranky.html", "w", encoding="utf-8") as f:
-    f.write(výstupní_html_stranky)
-print("Lísteček jako obrázek: 'listecek_stranky.html'")
+    f.write(vystupní_html_stranky)
+print("Lísteček na stránky: 'listecek_stranky.html'")
 
 # Generování HTML lístečku pro tisk
-výstupní_html_tisk = env.get_template('sablona_tisk.html').render(data)
+vystupní_html_tisk = env.get_template('sablona_tisk.html').render(data)
 with open("listecek_tisk.html", "w", encoding="utf-8") as f:
-    f.write(výstupní_html_tisk)
+    f.write(vystupní_html_tisk)
 print("Lísteček pro tisk: 'listecek_tisk.html'")
 
 # Generování PNG obrázku ze stránkového HTML
 try:
     # Nejprve vygenerujeme PDF do paměti s minimálními okraji
     pdf_bytes = io.BytesIO()
-    HTML(string=výstupní_html_stranky).write_pdf(
+    HTML(string=vystupní_html_stranky).write_pdf(
         pdf_bytes,
         stylesheets=[CSS(string='@page { size: auto; margin: 0; }')])
     pdf_bytes.seek(0)
+
     # Konvertujeme PDF na PNG pomocí pdf2image
     from pdf2image import convert_from_bytes
     images = convert_from_bytes(pdf_bytes.read(), first_page=1, last_page=1, dpi=150)
@@ -104,16 +106,15 @@ try:
     if bbox:
         image = image.crop(bbox)
     image.save("listecek_stranky.png")
-    print("PNG obrázek vytvořen: 'listecek_stranky.png'")
-
+    print("PNG na stránky vytvořen: 'listecek_stranky.png'")
 except Exception as e:
     print(f"Chyba při vytváření PNG: {e}")
 
 # Generování A4 PDF pro tisk
 try:
-    HTML(string=výstupní_html_tisk).write_pdf("listecek_tisk.pdf")
+    HTML(string=vystupní_html_tisk).write_pdf("listecek_tisk.pdf")
     print("PDF pro tisk vytvořen: 'listecek_tisk.pdf'")
 except Exception as e:
     print(f"Chyba při vytváření PDF: {e}")
 
-# conn.close()
+#conn.close()
