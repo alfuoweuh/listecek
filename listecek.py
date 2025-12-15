@@ -50,6 +50,10 @@ with open('header_skarabeus.jpg', 'rb') as f:
     image_data = base64.b64encode(f.read()).decode('utf-8')
     header_path = f"data:image/jpeg;base64,{image_data}"
 
+with open('header_nazev.jpg', 'rb') as f:
+    image_data_nazev = base64.b64encode(f.read()).decode('utf-8')
+    header_nazev_path = f"data:image/jpeg;base64,{image_data_nazev}"
+
 data = {
     "nazev_vypravy": název_výpravy,
     "sraz_cas": sraz_čas,
@@ -60,7 +64,8 @@ data = {
     "jidlo": jidlo,
     "penize": penize,
     "kontakty": kontakty,
-    "header_path": header_path
+    "header_path": header_path,
+    "header_nazev_path": header_nazev_path
 }
 
 env = jinja2.Environment(loader=jinja2.FileSystemLoader('.'))

@@ -79,14 +79,13 @@
             height: auto; 
         }
 
-        h1 {
+        .header-title-container {
             text-align: center;
-            text-transform: uppercase;
-            font-size: 16px; /* Zmenšená velikost písma */
-            font-weight: 900;
             margin: 5px 0;
-            letter-spacing: 0.5px;
-            text-shadow: 0.5px 0.5px 0 #ccc;
+        }
+        .header-title-img {
+            max-width: 100%;
+            height: auto;
         }
 
         .box {
@@ -137,7 +136,9 @@
                     <img src="{{ header_path }}" alt="Obrázek záhlaví oddílu Skarabeus" class="header-img"> 
                 </div>
 
-                <h1>VÝPRAVA oddílu Skarabeus</h1>
+                <div class="header-title-container">
+                    <img src="{{ header_nazev_path }}" alt="VÝPRAVA oddílu SKARABEUS" class="header-title-img">
+                </div>
 
                 <div class="box">
                     <span class="label">výprava:</span> {{ nazev_vypravy }}
