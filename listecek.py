@@ -7,17 +7,18 @@ if True is False:
 else:
     zadat = "n"
 if zadat in ['y', 'Y', 'yes', 'YES']:
-    název_výpravy = input("Název výpravy:")
-    sraz_čas = input("Čas srazu:")
-    sraz_místo = input("Místo srazu:")
-    rozchod_čas = input("Čas rozchodu:")
-    rozchod_místo = input("Místo rozchodu:")
+    print("Pro přeskočení položky stiskněte Enter.")
+    název_výpravy = input("Název výpravy: ")
+    sraz_čas = input("Čas srazu: ")
+    sraz_místo = input("Místo srazu: ")
+    rozchod_čas = input("Čas rozchodu: ")
+    rozchod_místo = input("Místo rozchodu: ")
 
-    s_sebou = input("Co s sebou:")
-    kdo_ma = input("Kdo má (nepovinné):")
-    jidlo = input("Jaké jídlo s sebou:")
-    penize = input("Kolik peněz s sebou:")
-    poznamka = input("Poznámka (nepovinné):")
+    s_sebou = input("Co s sebou: ")
+    kdo_ma = input("Co s sebou jen ti, co mají: ")
+    jidlo = input("Jaké jídlo s sebou: ")
+    penize = input("Kolik peněz s sebou: ")
+    poznamka = input("Poznámka: ")
     kontakty = []
     while True:
         jmeno = input("Jméno kontaktu (nebo prázdné pro konec): ")
