@@ -2,7 +2,7 @@
 #conn = sqlite3.connect('výpravy.db')
 
 # Zadání dat
-if True is False:
+if True == False:
     zadat = input("Vlastní data (Y/n)? ")
 else:
     zadat = "n"
@@ -38,7 +38,7 @@ else:
     kdo_ma = ""
     jidlo = "dvě snídaně, dva obědy, jedna večeře; k volnému užití bude varná konvice a mikrovlnka, akorát sobotní oběd mladších / sobotní večeře a nedělní snídaně i oběd starších musí být studený"
     penize = "100 Kč; možná půjde dělat autíčka, to byste za něj zaplatili něco navíc; kolik, se ještě uvidí"
-    poznamka = ""
+    poznamka = "Bude zima, tak se oblečte, jak vám je po chuti. Klidně můžete zmrznout, ale mrazák nechte doma."
     kontakty = [
         {"jmeno": "Vojta (starší)", "telefon": "739 287 724", "email": "xhurfr01@gjk.cz"},
         {"jmeno": "Myšák (mladší)", "telefon": "731 192 036", "email": "fred@ctrnactka.cz"},
