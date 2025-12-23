@@ -12,22 +12,49 @@
             line-height: 1.2;
         }
         
-        /* Hlavní kontejner */
+        /* Hlavní kontejner - Table layout */
         .container {
             width: 330px;
             min-height: 424px;
             font-size: 12.5px;
-            display: flex;
-            flex-direction: column;
+
+            display: table;
+            border-collapse: separate;
+            border-spacing: 0 6px; /* Nahrazuje flex gap */
+
             border: 1px solid #000;
             padding: 6px;
-            gap: 6px;
+            box-sizing: border-box; /* Aby padding nezvětšoval šířku */
         }
 
+        /* Pomocné třídy pro tabulkový layout */
+        .tr {
+            display: table-row;
+        }
+
+        .td {
+            display: table-cell;
+            vertical-align: top;
+        }
+
+        /* Řádek, který se má roztáhnout (obsah) */
+        .tr-expand {
+            display: table-row;
+            height: 100%;
+        }
+
+        .td-expand {
+            display: table-cell;
+            height: 100%;
+            vertical-align: top;
+        }
+
+        /* Obsah záhlaví */
         .header-img-container {
-            width: 99.3%;
+            width: 100%;
             border: 1px solid #000;
             overflow: hidden;
+            /* display: block; default */
         }
         .header-img {
             display: block; 
@@ -45,16 +72,6 @@
             margin: 0 auto;
         }
 
-        /* Styl pro rámečky */
-        .box {
-            border: 1px solid #000;
-            padding: 3px;
-            flex-grow: 1;
-            display: flex;
-            flex-direction: column;
-            justify-content: space-between;
-        }
-
         /* Styl pro název výpravy */
         .trip-name {
             border: 1px solid #000;
@@ -62,10 +79,9 @@
             text-align: center;
             font-size: 14px;
             font-weight: 600;
-            flex-shrink: 0;
         }
 
-        /* Flexbox pro dvousloupcový řádek (sraz/návrat) */
+        /* Sraz / Návrat řádek - uvnitř buňky */
         .row {
             display: flex;
             gap: 6px;
@@ -75,6 +91,19 @@
             flex: 1;
             border: 1px solid #000;
             padding: 3px;
+        }
+
+        /* Styl pro rámečky obsahu */
+        .box {
+            border: 1px solid #000;
+            padding: 3px;
+
+            /* Flex uvnitř boxu pro "pružinu" mezi obsahem a kontakty */
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            height: 100%; /* Vyplní buňku */
+            box-sizing: border-box;
         }
 
         /* Typografie */
@@ -98,74 +127,100 @@
 
     <div class="container">
         
-        <div class="header-img-container">
-            <img src="{{ header_obrazek_path }}" alt="Obrázek záhlaví oddílu Skarabeus" class="header-img"> 
-        </div>
-
-        <div class="header-title-container">
-            <img src="{{ header_nazev_path }}" alt="VÝPRAVA oddílu SKARABEUS" class="header-title-img">
-        </div>
-
-        <div class="trip-name">
-            {{ nazev_vypravy }}
-        </div>
-
-        <div class="row">
-            <div class="col-half">
-                <div class="label">sraz:</div>
-                <div>{{ sraz_cas }}</div>
-                <div>{{ sraz_misto }}</div>
-            </div>
-            <div class="col-half">
-                <div class="label">návrat:</div>
-                <div>{{ rozchod_cas }}</div>
-                <div>{{ rozchod_misto }}</div>
-            </div>
-        </div>
-
-        <div class="box">
-            <div>
-                {% if s_sebou %}
-                <p>
-                    <span class="label">s sebou:</span> {{ s_sebou }}
-                </p>
-                {% endif %}
-                {% if kdo_ma %}
-                <p>
-                    <span class="label">kdo má:</span> {{ kdo_ma }}
-                </p>
-                {% endif %}
-                {% if jidlo %}
-                <p>
-                    <span class="label">jídlo:</span> {{ jidlo }}
-                </p>
-                {% endif %}
-                {% if penize %}
-                <p>
-                    <span class="label">cena:</span> {{ penize }}
-                </p>
-                {% endif %}
-                {% if poznamka %}
-                <p>
-                    {{ poznamka }}
-                </p>
-                {% endif %}
-            </div>
-
-            <div class="contacts">
-                {% for kontakt in kontakty %}
-                <div>
-                    {{ kontakt.jmeno }}
-                    {%- set details = [] -%}
-                    {%- if kontakt.telefon %}{% set _ = details.append(kontakt.telefon) %}{% endif -%}
-                    {%- if kontakt.email %}{% set _ = details.append(kontakt.email) %}{% endif -%}
-                    {%- if details -%}
-                    : {{ details|join(', ') }}
-                    {%- endif -%}
+        <!-- 1. Obrázek -->
+        <div class="tr">
+            <div class="td">
+                <div class="header-img-container">
+                    <img src="{{ header_obrazek_path }}" alt="Obrázek záhlaví oddílu Skarabeus" class="header-img">
                 </div>
-                {% endfor %}
             </div>
         </div>
+
+        <!-- 2. Titulní obrázek -->
+        <div class="tr">
+            <div class="td">
+                <div class="header-title-container">
+                    <img src="{{ header_nazev_path }}" alt="VÝPRAVA oddílu SKARABEUS" class="header-title-img">
+                </div>
+            </div>
+        </div>
+
+        <!-- 3. Název výpravy -->
+        <div class="tr">
+            <div class="td">
+                <div class="trip-name">
+                    {{ nazev_vypravy }}
+                </div>
+            </div>
+        </div>
+
+        <!-- 4. Sraz / Návrat -->
+        <div class="tr">
+            <div class="td">
+                <div class="row">
+                    <div class="col-half">
+                        <div class="label">sraz:</div>
+                        <div>{{ sraz_cas }}</div>
+                        <div>{{ sraz_misto }}</div>
+                    </div>
+                    <div class="col-half">
+                        <div class="label">návrat:</div>
+                        <div>{{ rozchod_cas }}</div>
+                        <div>{{ rozchod_misto }}</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- 5. Obsah (roztažitelný) -->
+        <div class="tr-expand">
+            <div class="td-expand">
+                <div class="box">
+                    <div>
+                        {% if s_sebou %}
+                        <p>
+                            <span class="label">s sebou:</span> {{ s_sebou }}
+                        </p>
+                        {% endif %}
+                        {% if kdo_ma %}
+                        <p>
+                            <span class="label">kdo má:</span> {{ kdo_ma }}
+                        </p>
+                        {% endif %}
+                        {% if jidlo %}
+                        <p>
+                            <span class="label">jídlo:</span> {{ jidlo }}
+                        </p>
+                        {% endif %}
+                        {% if penize %}
+                        <p>
+                            <span class="label">cena:</span> {{ penize }}
+                        </p>
+                        {% endif %}
+                        {% if poznamka %}
+                        <p>
+                            {{ poznamka }}
+                        </p>
+                        {% endif %}
+                    </div>
+
+                    <div class="contacts">
+                        {% for kontakt in kontakty %}
+                        <div>
+                            {{ kontakt.jmeno }}
+                            {%- set details = [] -%}
+                            {%- if kontakt.telefon %}{% set _ = details.append(kontakt.telefon) %}{% endif -%}
+                            {%- if kontakt.email %}{% set _ = details.append(kontakt.email) %}{% endif -%}
+                            {%- if details -%}
+                            : {{ details|join(', ') }}
+                            {%- endif -%}
+                        </div>
+                        {% endfor %}
+                    </div>
+                </div>
+            </div>
+        </div>
+
     </div>
 
 </body>
