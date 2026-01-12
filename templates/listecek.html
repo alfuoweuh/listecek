@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="cs">
+<head>
+    <meta charset="UTF-8">
+    <title>Lísteček {{ nazev_vypravy }}</title>
+</head>
+<body>
+    <h1>Rozšafný generátor lístečku</h1>
+    <form method="POST" action="/listecek">
+        <input type="hidden" name="id" value="{{ id }}">
+
+        <label for="nazev_vypravy">Název výpravy:</label>
+        <input type="text" name="nazev_vypravy" placeholder="Putování na Trutnovsko" value="{{ nazev_vypravy }}">
+        <br><br>
+        <label for="rok">Rok (na lístečku nebude):</label>
+        <input type="text" name="rok" value="{{ current_year }}">
+        <br><br>
+        <label for="sraz_cas">Čas srazu:</label>
+        <input type="text" name="sraz_cas" placeholder="pátek 13. 13. v 13:13" value="{{ sraz_cas }}">
+        <br>
+        <label for="sraz_misto">Místo srazu:</label>
+        <input type="text" name="sraz_misto" placeholder="na Hlavním nádraží" value="{{ sraz_misto }}">
+        <br><br>
+        <label for="rozchod_cas">Čas rozchodu:</label>
+        <input type="text" name="rozchod_cas" placeholder="neděle 15.13 v 13:13" value="{{ rozchod_cas }}">
+        <br>
+        <label for="rozchod_misto">Místo rozchodu:</label>
+        <input type="text" name="rozchod_misto" placeholder="tamtéž" value="{{ rozchod_misto }}">
+        <br><br>
+        <label for="s_sebou">S sebou:</label>
+        <textarea name="s_sebou" rows="4" cols="50" placeholder="věci na vícedenní výpravu, prskavky…">{{ s_sebou }}</textarea>
+        <br>
+        <label for="kdo_ma">Kdo má:</label>
+        <textarea name="kdo_ma" rows="4" cols="50" placeholder="lakrosku, dort">{{ kdo_ma }}</textarea>
+        <br>
+        <label for="jidlo">Jídlo:</label>
+        <textarea name="jidlo" rows="4" cols="50" placeholder="páteční večeři, snídaně, studený sobotní oběd; jinak bude k dispozici horká voda">{{ jidlo }}</textarea>
+        <br>
+        <label for="penize">Peníze:</label>
+        <input type="text" name="penize" placeholder="100 Kč" value="{{ penize }}">
+        <br>
+        <label for="poznamka">Poznámka:</label>
+        <textarea name="poznamka" rows="4" cols="50" placeholder="Další důležité informace...">{{ poznamka }}</textarea>
+        <br><br>
+        <label>Kontakty:</label>
+        <br>
+        {% for i in range(3) %}
+        <label for="kontakt_jmeno_{{ i }}">Jméno:</label>
+        <input type="text" name="kontakt_jmeno_{{ i }}" placeholder="Heliodor" value="{{ kontakty[i].jmeno if (kontakty|default([]))[i] else '' }}">
+        <label for="kontakt_email_{{ i }}">Email:</label>
+        <input type="text" name="kontakt_email_{{ i }}" placeholder="heliodor@ctrnactka.cz" value="{{ kontakty[i].email if (kontakty|default([]))[i] else '' }}">
+        <label for="kontakt_telefon_{{ i }}">Telefon:</label>
+        <input type="text" name="kontakt_telefon_{{ i }}" placeholder="424 242 424" value="{{ kontakty[i].telefon if (kontakty|default([]))[i] else '' }}">
+        <br>
+        {% endfor %}
+        <br>
+        <button type="submit" value="save">Uložit</button>
+        <button type="submit" value="delete">Smazat</button>
+        <button type="submit" value="generate">Uložit a generovat</button>
+        {% if action == 'generate' %}
+        <button type="submit" value="download_png">Stáhnout obrázek na stránky</button>
+        <button type="submit" value="download_pdf">Stáhnout PDF na tisk</button>
+        {% endif %}
+    </form>
+</body>
+</html>

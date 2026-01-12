@@ -87,10 +87,10 @@ import base64
 # Převod obrázků na base64 datový URL
 with open('header_obrazek.jpg', 'rb') as f:
     image_data = base64.b64encode(f.read()).decode('utf-8')
-    header_obrazek_path = f"data:image/jpeg;base64,{image_data}"
+    image_path = f"data:image/jpeg;base64,{image_data}"
 with open('header_nazev.jpg', 'rb') as f:
-    image_data_nazev = base64.b64encode(f.read()).decode('utf-8')
-    header_nazev_path = f"data:image/jpeg;base64,{image_data_nazev}"
+    header_data = base64.b64encode(f.read()).decode('utf-8')
+    header_path = f"data:image/jpeg;base64,{header_data}"
 
 # Příprava dat pro šablonu
 data = {
@@ -105,8 +105,8 @@ data = {
     "penize": penize,
     "poznamka": poznamka,
     "kontakty": kontakty,
-    "header_obrazek_path": header_obrazek_path,
-    "header_nazev_path": header_nazev_path
+    "image_path": image_path,
+    "header_path": header_path
 }
 
 # Jinja2 jde do akce!
