@@ -8,12 +8,11 @@
     <h1>Rozšafný generátor lístečku</h1>
     <form method="POST" action="/listecek">
         <input type="hidden" name="id" value="{{ id }}">
-
         <label for="nazev_vypravy">Název výpravy:</label>
         <input type="text" name="nazev_vypravy" placeholder="Putování na Trutnovsko" value="{{ nazev_vypravy }}">
         <br><br>
         <label for="rok">Rok (na lístečku nebude):</label>
-        <input type="text" name="rok" value="{{ current_year }}">
+        <input type="text" name="rok" placeholder="1968" value="{{ rok }}">
         <br><br>
         <label for="sraz_cas">Čas srazu:</label>
         <input type="text" name="sraz_cas" placeholder="pátek 13. 13. v 13:13" value="{{ sraz_cas }}">
@@ -44,22 +43,37 @@
         <br><br>
         <label>Kontakty:</label>
         <br>
-        {% for i in range(3) %}
-        <label for="kontakt_jmeno_{{ i }}">Jméno:</label>
-        <input type="text" name="kontakt_jmeno_{{ i }}" placeholder="Heliodor" value="{{ kontakty[i].jmeno if (kontakty|default([]))[i] else '' }}">
-        <label for="kontakt_email_{{ i }}">Email:</label>
-        <input type="text" name="kontakt_email_{{ i }}" placeholder="heliodor@ctrnactka.cz" value="{{ kontakty[i].email if (kontakty|default([]))[i] else '' }}">
-        <label for="kontakt_telefon_{{ i }}">Telefon:</label>
-        <input type="text" name="kontakt_telefon_{{ i }}" placeholder="424 242 424" value="{{ kontakty[i].telefon if (kontakty|default([]))[i] else '' }}">
+        <label for="kontakt_jmeno_0">Jméno:</label>
+        <input type="text" name="kontakt_jmeno_0" placeholder="Heliodor" value="{{ kontakt_jmeno_0 }}">
+        <label for="kontakt_email_0">Email:</label>
+        <input type="text" name="kontakt_email_0" placeholder="heliodor@ctrnactka.cz" value="{{ kontakt_email_0 }}">
+        <label for="kontakt_telefon_0">Telefon:</label>
+        <input type="text" name="kontakt_telefon_0" placeholder="424 242 424" value="{{ kontakt_telefon_0 }}">
         <br>
-        {% endfor %}
+        <label for="kontakt_jmeno_1">Jméno:</label>
+        <input type="text" name="kontakt_jmeno_1" placeholder="Heliodor" value="{{ kontakt_jmeno_1 }}">
+        <label for="kontakt_email_1">Email:</label>
+        <input type="text" name="kontakt_email_1" placeholder="heliodor@ctrnactka.cz" value="{{ kontakt_email_1 }}">
+        <label for="kontakt_telefon_1">Telefon:</label>
+        <input type="text" name="kontakt_telefon_1" placeholder="424 242 424" value="{{ kontakt_telefon_1 }}">
         <br>
-        <button type="submit" value="save">Uložit</button>
-        <button type="submit" value="delete">Smazat</button>
-        <button type="submit" value="generate">Uložit a generovat</button>
+        <label for="kontakt_jmeno_2">Jméno:</label>
+        <input type="text" name="kontakt_jmeno_2" placeholder="Heliodor" value="{{ kontakt_jmeno_2 }}">
+        <label for="kontakt_email_2">Email:</label>
+        <input type="text" name="kontakt_email_2" placeholder="heliodor@ctrnactka.cz" value="{{ kontakt_email_2 }}">
+        <label for="kontakt_telefon_2">Telefon:</label>
+        <input type="text" name="kontakt_telefon_2" placeholder="424 242 424" value="{{ kontakt_telefon_2 }}">
+        <br>
+        <br>
+        <button type="submit" name="action" value="save">Uložit</button>
+        <button type="submit" name="action" value="delete">Smazat</button>
+        <button type="submit" name="action" value="generate">Uložit a generovat</button>
         {% if action == 'generate' %}
-        <button type="submit" value="download_png">Stáhnout obrázek na stránky</button>
-        <button type="submit" value="download_pdf">Stáhnout PDF na tisk</button>
+        <button type="submit" name="action" value="download_png">Stáhnout obrázek na stránky</button>
+        <button type="submit" name="action" value="download_pdf">Stáhnout PDF na tisk</button>
+        {% endif %}
+        {% if id %}
+        ID: {{ id }}
         {% endif %}
     </form>
 </body>

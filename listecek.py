@@ -99,13 +99,13 @@ elif zadat in ['n', 'N', 'no', 'NO']:
             "sraz_misto": "na Hlavním nádraží",
             "rozchod_cas": "v neděli 1. 2. v 18:43",
             "rozchod_misto": "tamtéž",
-            "s_sebou": "věci na vícedenní výpravu (karimatku stačí, když si vezme ¼ z nás), běžky, hůlky, běžkovací boty, malý batůžek, případně termosku, teplé oblečení na dovnitř",
+            "s_sebou": "věci na vícedenní výpravu (karimatku stačí, když si vezme ¼ z nás), běžky, hůlky, běžkovací boty, malý batůžek, případně termosku, teplé oblečení na dovnitř, <b>bačkory</b>",
             "kdo_ma": "lakrosku, vosky",
             "jidlo": "čtvrteční večeři, dva obědy na výlety",
             "penize": "zaplatíte po výpravě (bude to cca 600 Kč)",
             "poznamka": "Dejte si běžkovací boty apod. do batohu nahoru, poněvadž z autobusu půjdeme nějakých 5 km na běžkách (když nebude sníh, tak pěšky). <p></p> Když přijedeme, bude v chalupě teplota jak venku a jen tak se celá nevytopí.",
             "kontakty": [
-                {"jmeno": "Fred", "telefon": "778 597 126", "email": "fred@ctrnactka.cz"}
+                {"jmeno": "<p></p> Fred", "telefon": "778 597 126", "email": "fred@ctrnactka.cz"}
             ]
         }
 
@@ -144,7 +144,7 @@ try:
     # Konvertování PDF na PNG
     from pdf2image import convert_from_bytes
     images = convert_from_bytes(pdf_bytes.read(), first_page=1, last_page=1, dpi=150)
-    # Automatické oříznutí bílého místa)
+    # Automatické oříznutí bílého místa
     image = images[0]
     from PIL import ImageChops
     inverted_image = ImageChops.invert(image.convert('L'))
@@ -162,5 +162,3 @@ try:
     print("PDF pro tisk vytvořen: 'listecek_tisk.pdf'")
 except Exception as e:
     print(f"Chyba při vytváření PDF: {e}")
-
-#conn.close()

@@ -3,19 +3,20 @@ from datetime import datetime
 from tinydb import TinyDB, Query
 
 app = Flask(__name__)
+db = TinyDB('listecky.json')
+Item = Query()
+
 
 @app.route('/')
 def home():
     return render_template('index.html')
 
+
 @app.route('/vyber', methods=['GET'])
 def vyber():
     action = request.args.get('action')  # What button was pressed?
-    if action == 'open':
-        pass
-    elif action == 'template':
-        pass
-    return render_template('vyber.html' , action=action)
+    return render_template('vyber.html', action=action)
+
 
 @app.route('/listecek', methods=['GET', 'POST'])
 def listecek():
@@ -23,47 +24,27 @@ def listecek():
         action = request.args.get('action')  # What button was pressed?
 
         if action == 'template' or action == 'open':
-            ## Here we would load existing data from the database
-            # For demonstration, we use hardcoded data
-            id = 1
-            název_výpravy = "Nejen autodráha v klubovně"
-            sraz_čas = "v sobotu 20. 9. v 10:00"
-            sraz_místo = "v klubovně"
-            rozchod_čas = "v neděli 21. 9. v 17:00"
-            rozchod_místo = "tamtéž"
+            data = db.get(Query().id == 1)
 
-            s_sebou = "výbornou náladu, věci dle seznamu věcí na vícedenní výpravu na našich stránkách (půjdeme na výlet, starší budou venku i spát)"
-            kdo_ma = ""
-            jidlo = "dvě snídaně, dva obědy, jedna večeře; k volnému užití bude varná konvice a mikrovlnka, akorát sobotní oběd mladších / sobotní večeře a nedělní snídaně i oběd starších musí být studený"
-            penize = "100 Kč; možná půjde dělat autíčka, to byste za něj zaplatili něco navíc; kolik, se ještě uvidí"
-            poznamka = "Bude zima, tak se oblečte, jak vám je po chuti. Klidně můžete zmrznout, ale mrazák nechte doma."
-            kontakty = [
-                {"jmeno": "Vojta (starší)", "telefon": "739 287 724", "email": "vevebot123@gmail.com"},
-                {"jmeno": "Myšák (mladší)", "telefon": "731 192 036", "email": "mysak@ctrnactka.cz"}
-            ]
-            data = {
-                "id": id,
-                "nazev_vypravy": název_výpravy,
-                "sraz_cas": sraz_čas,
-                "sraz_misto": sraz_místo,
-                "rozchod_cas": rozchod_čas,
-                "rozchod_misto": rozchod_místo,
-                "s_sebou": s_sebou,
-                "kdo_ma": kdo_ma,
-                "jidlo": jidlo,
-                "penize": penize,
-                "poznamka": poznamka,
-                "kontakty": kontakty,
-            }
-        
+            if action == 'template':
+                data['id'] = ''
+            
+            
         elif action == 'new':
-            data = {"kontakty": []}
+            data = {
+                "rok": str(datetime.now().year)
+            }
 
-        return render_template('listecek.html', action=action, current_year=datetime.now().year, **data)
+        return render_template('listecek.html', action=action, **data)
     
-    elif request.method == 'POST': # Form was submitted
+
+    elif request.method == 'POST':
+        action = request.form.get('action')
+        
         data = {
+            "id": request.form.get('id', ''),
             "nazev_vypravy": request.form.get('nazev_vypravy', ''),
+            "rok": request.form.get('rok', ''),
             "sraz_cas": request.form.get('sraz_cas', ''),
             "sraz_misto": request.form.get('sraz_misto', ''),
             "rozchod_cas": request.form.get('rozchod_cas', ''),
@@ -73,17 +54,26 @@ def listecek():
             "jidlo": request.form.get('jidlo', ''),
             "penize": request.form.get('penize', ''),
             "poznamka": request.form.get('poznamka', ''),
-
-            "kontakty": []
+            "kontakt_jmeno_0": request.form.get('kontakt_jmeno_0', ''),
+            "kontakt_telefon_0": request.form.get('kontakt_telefon_0', ''),
+            "kontakt_email_0": request.form.get('kontakt_email_0', ''),
+            "kontakt_jmeno_1": request.form.get('kontakt_jmeno_1', ''),
+            "kontakt_telefon_1": request.form.get('kontakt_telefon_1', ''),
+            "kontakt_email_1": request.form.get('kontakt_email_1', ''),
+            "kontakt_jmeno_2": request.form.get('kontakt_jmeno_2', ''),
+            "kontakt_telefon_2": request.form.get('kontakt_telefon_2', ''),
+            "kontakt_email_2": request.form.get('kontakt_email_2', '')
         }
-        for i in range(3):
-            jmeno = request.form.get(f'kontakt_jmeno_{i}', '').strip()
-            telefon = request.form.get(f'kontakt_telefon_{i}', '').strip()
-            email = request.form.get(f'kontakt_email_{i}', '').strip()
-            if jmeno or telefon or email:
-                data["kontakty"].append({"jmeno": jmeno, "telefon": telefon, "email": email})
 
-        return render_template('listecek.html', action='edit', current_year=datetime.now().year, **data)
+        if action == 'save' or action == 'generate':
+            if data['id'] == '':
+                data['id'] = max([int(item.get('id', 0)) for item in db.all() if item.get('id')]) + 1
+            else:
+                data['id'] = int(data['id'])
+            db.upsert(data, Query().id == data['id'])
+
+        return render_template('listecek.html', action='edit', **data)
+
 
 if __name__ == '__main__':
     app.run(debug=True)
