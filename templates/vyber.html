@@ -6,9 +6,13 @@
 </head>
 <body>
     <h1>{% if action == "template" %}Nechť si vyberou nějaký starý lísteček jako šablonu a vdechnou mu zpět s novými daty život.{% elif action == "open" %}Nechť si vyberou, jaký lísteček jest jim po chuti upraviti.{% endif %}</h1>
+    {% for listecek in listecky %}
     <form method="GET" action="/listecek">
-        <button type="submit" name="action" value="{{ action }}">Tlačítko</button>
-        <p></p>
+        <label>{{ listecek.nazev_vypravy }} – {{ listecek.rok }}</label>
+        <input type="hidden" name="id" value="{{ listecek.id }}">
+        <button type="submit" name="action" value="{% if action == 'template' %}template{% else %}open{% endif %}">{% if action == "template" %}Použít{% else %}Otevřít{% endif %}</button>
     </form>
+    <br>
+    {% endfor %}
 </body>
 </html>

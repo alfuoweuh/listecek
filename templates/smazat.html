@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="cs">
+<head>
+    <meta charset="UTF-8">
+    <title>Smazat?</title>
+</head>
+<body>
+    <h1>Jsou si nade vše na světě jisti, že chtějí smazat {% if not nazev_vypravy %}tento lísteček?{% else %}lísteček {{ nazev_vypravy }} {{ rok }}?{% endif %}</h1>
+    <form method="POST" action="/">
+        <input type="hidden" name="id" value="{{ id }}">
+        <button type="submit" name="action" value="yes_delete">Ano!</button>
+        <p></p>
+    </form>
+    <form method="POST" action="/listecek">
+        <input type="hidden" name="id" value="{{ id }}">
+        <input type="hidden" name="nazev_vypravy" value="{{ nazev_vypravy }}">
+        <input type="hidden" name="rok" value="{{ rok }}">
+        <input type="hidden" name="sraz_cas" value="{{ sraz_cas }}">
+        <input type="hidden" name="sraz_misto" value="{{ sraz_misto }}">
+        <input type="hidden" name="rozchod_cas" value="{{ rozchod_cas }}">
+        <input type="hidden" name="rozchod_misto" value="{{ rozchod_misto }}">
+        <input type="hidden" name="s_sebou" value="{{ s_sebou }}">
+        <input type="hidden" name="kdo_ma" value="{{ kdo_ma }}">
+        <input type="hidden" name="jidlo" value="{{ jidlo }}">
+        <input type="hidden" name="penize" value="{{ penize }}">
+        <input type="hidden" name="poznamka" value="{{ poznamka }}">
+        <input type="hidden" name="kontakt_jmeno_0" value="{{ kontakt_jmeno_0 }}">
+        <input type="hidden" name="kontakt_telefon_0" value="{{ kontakt_telefon_0 }}">
+        <input type="hidden" name="kontakt_email_0" value="{{ kontakt_email_0 }}">
+        <input type="hidden" name="kontakt_jmeno_1" value="{{ kontakt_jmeno_1 }}">
+        <input type="hidden" name="kontakt_telefon_1" value="{{ kontakt_telefon_1 }}">
+        <input type="hidden" name="kontakt_email_1" value="{{ kontakt_email_1 }}">
+        <input type="hidden" name="kontakt_jmeno_2" value="{{ kontakt_jmeno_2 }}">
+        <input type="hidden" name="kontakt_telefon_2" value="{{ kontakt_telefon_2 }}">
+        <input type="hidden" name="kontakt_email_2" value="{{ kontakt_email_2 }}">
+        <button type="submit" name="action" value="no_delete">Ne!</button>
+    </form>
+</body>
+</html>

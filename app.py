@@ -4,18 +4,22 @@ from tinydb import TinyDB, Query
 
 app = Flask(__name__)
 db = TinyDB('listecky.json')
-Item = Query()
 
 
-@app.route('/')
+@app.route('/', methods=['GET', 'POST'])
 def home():
+    action = request.form.get('action')
+    if request.method == 'POST' and action == 'yes_delete': # Delete was confirmed
+        id = request.form.get('id', '').strip()
+        if id:
+            db.remove(Query().id == int(id))
     return render_template('index.html')
 
 
 @app.route('/vyber', methods=['GET'])
 def vyber():
     action = request.args.get('action')  # What button was pressed?
-    return render_template('vyber.html', action=action)
+    return render_template('vyber.html', action=action, listecky=db.all())
 
 
 @app.route('/listecek', methods=['GET', 'POST'])
@@ -24,7 +28,8 @@ def listecek():
         action = request.args.get('action')  # What button was pressed?
 
         if action == 'template' or action == 'open':
-            data = db.get(Query().id == 1)
+            id = int(request.args.get('id', ''))
+            data = db.get(Query().id == id)
 
             if action == 'template':
                 data['id'] = ''
@@ -35,8 +40,8 @@ def listecek():
                 "rok": str(datetime.now().year)
             }
 
-        return render_template('listecek.html', action=action, **data)
-    
+        return render_template('listecek.html', **data)
+
 
     elif request.method == 'POST':
         action = request.form.get('action')
@@ -71,8 +76,10 @@ def listecek():
             else:
                 data['id'] = int(data['id'])
             db.upsert(data, Query().id == data['id'])
-
-        return render_template('listecek.html', action='edit', **data)
+        if action == 'delete':
+            return render_template('smazat.html', **data)
+        else:
+            return render_template('listecek.html', **data)
 
 
 if __name__ == '__main__':

@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Hello World!</title>
+</head>
+<body>
+    <h1>Hello World!</h1>
+    <p>This is a paragraph.</p>
+    <p><b>This should be bold.</b></p>
+    <p>This should be <span style="font-weight: bold;">bold</span> too.</p>
+    <p style="font-weight: bold;">And this too.</p>
+    <p><i>This should be italic.</i></p>
+    <p><u>This should be underlined.</u></p>
+    <p><s>This should be struck out.</s></p>
+    <p style="color: red;">This should be coloured.</p>
+    <p><a href="https://www.example.com">This is a link to example.com</a></p>
+    <h1>This are my microcontrollers:</h1>
+    <ul>
+        {% for board in boards_list %}
+            <li>{{ board }}</li>
+        {% endfor %}
+    </ul>
+    {% if boards_list|length > 3 %}
+        <p><b>Wow, that's a big collection!</b></p>
+    {% elif boards_list|length > 1 %}
+        <p><b>Your collection is modest.</b></p>
+    {% else %}
+        <p><b>You should consider adding more boards to your collection.</b></p>
+    {% endif %}
+    <form method="POST">
+        <input type="text" name="new_board" placeholder="Enter board name...">
+        <button type="submit" name="action" value="add">Add Board ➕</button>
+        <p></p>
+        <button type="submit" name="action" value="regenerate">Regenerate List 🔄</button>
+    </form>
+</body>
+</html>
