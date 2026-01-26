@@ -26,7 +26,7 @@ def home():
 
 
 # Selection page
-@app.route('/výběr', methods=['GET'])
+@app.route('/vyber', methods=['GET'])
 def vyber():
     action = request.args.get('action')
     return render_template('vyber.html', action=action, listecky=db.all())
