@@ -5,58 +5,62 @@ from datetime import datetime
 from tinydb import TinyDB, Query
 from generovani import generate
 
+# Flask app and TinyDB setup with absolute path for the DB file
 app = Flask(__name__)
-base_dir = os.path.dirname(os.path.abspath(__file__))
-db_path = os.path.join(base_dir, 'listecky.json')
-db = TinyDB(db_path)
-
-# Globální proměnné pro uložené soubory
-listecek_png_cache = None
-listecek_pdf_cache = None
+dir_abs_path = os.path.dirname(os.path.abspath(__file__))
+db_abs_path = os.path.join(dir_abs_path, 'listecky.json')
+db = TinyDB(db_abs_path)
 
 
+# Home page
 @app.route('/', methods=['GET', 'POST'])
 def home():
+    # Deleting an entry from DB
     action = request.form.get('action')
-    if request.method == 'POST' and action == 'yes_delete': # Delete was confirmed
+    if request.method == 'POST' and action == 'yes_delete':
         id = request.form.get('id', '').strip()
         if id:
             db.remove(Query().id == int(id))
+
     return render_template('index.html')
 
 
-@app.route('/vyber', methods=['GET'])
+# Selection page
+@app.route('/výběr', methods=['GET'])
 def vyber():
-    action = request.args.get('action')  # What button was pressed?
+    action = request.args.get('action')
     return render_template('vyber.html', action=action, listecky=db.all())
 
 
+# Form page
 @app.route('/listecek', methods=['GET', 'POST'])
 def listecek():
-    global listecek_png_cache, listecek_pdf_cache
-    
-    if request.method == 'GET': # Button on the welcome page was pressed
-        action = request.args.get('action')  # What button was pressed?
+    # The user comes from an selection or home page (open, template, new)
+    if request.method == 'GET': 
 
+        # What button was pressed?
+        action = request.args.get('action')
+
+        # Preparing data for the form
         if action == 'template' or action == 'open':
             id = int(request.args.get('id', ''))
             data = db.get(Query().id == id)
-
             if action == 'template':
                 data['id'] = ''
-            
-            
-        elif action == 'new':
+        
+        # New empty form with current year
+        else:
             data = {
                 "rok": str(datetime.now().year)
             }
-
+        
+        # Rendering form
         return render_template('listecek.html', **data)
 
-
+    # The user comes from the form
     elif request.method == 'POST':
-        action = request.form.get('action')
-        
+
+        # Getting form data from user
         data = {
             "id": request.form.get('id', ''),
             "nazev_vypravy": request.form.get('nazev_vypravy', ''),
@@ -81,35 +85,59 @@ def listecek():
             "kontakt_email_2": request.form.get('kontakt_email_2', '')
         }
 
-        if action == 'save' or action == 'generate':
+        # What button was pressed?
+        action = request.form.get('action')
+
+        # Saving data to DB
+        if action in ['save', 'download_png', 'download_pdf']:
             if data['id'] == '':
                 data['id'] = max([int(item.get('id', 0)) for item in db.all() if item.get('id')]) + 1
             else:
                 data['id'] = int(data['id'])
             db.upsert(data, Query().id == data['id'])
-        if action == 'generate':
-            listecek_png_cache, listecek_pdf_cache = generate(data)
-        if action == 'delete':
+
+        # Generating files
+        if action == 'download_png':
+            listecek_png = generate(data, 'png')
+            return stahnout('png', listecek_png)
+        elif action == 'download_pdf':
+            listecek_pdf = generate(data, 'pdf')
+            return stahnout('pdf', listecek_pdf)
+
+        # Deleting data from DB
+        elif action == 'delete':
             return render_template('smazat.html', **data)
+
+        # Rendering the form again
         else:
             return render_template('listecek.html', action=action, **data)
 
-
-@app.route('/download/<file_type>')
-def download(file_type):
-    global listecek_png_cache, listecek_pdf_cache
-    
-    if file_type == 'png' and listecek_png_cache:
+# Downloading files
+@app.route('/stahnout')
+def stahnout(file_type, listecek_bytes):
+    if file_type == 'png' and listecek_bytes:
         img_io = io.BytesIO()
-        listecek_png_cache.save(img_io, 'PNG')
+        listecek_bytes.save(img_io, 'PNG')
         img_io.seek(0)
         return send_file(img_io, as_attachment=True, download_name='listecek_stranky.png', mimetype='image/png')
-    elif file_type == 'pdf' and listecek_pdf_cache:
-        listecek_pdf_cache.seek(0)
-        return send_file(listecek_pdf_cache, as_attachment=True, download_name='listecek_tisk.pdf', mimetype='application/pdf')
-    else:
-        return "Soubor není k dispozici", 404
+    
+    elif file_type == 'pdf' and listecek_bytes:
+        listecek_bytes.seek(0)
+        return send_file(listecek_bytes, as_attachment=True, download_name='listecek_tisk.pdf', mimetype='application/pdf')
 
+# Error handlers
+@app.errorhandler(404)
+def page_not_found(error):
+    return render_template('chyba.html', error_code=404, error_message='stránka nenalezena'), 404
 
+@app.errorhandler(500)
+def internal_error(error):
+    return render_template('chyba.html', error_code=500, error_message='vnitřní chyba serveru'), 500
+
+@app.errorhandler(400)
+def bad_request(error):
+    return render_template('chyba.html', error_code=400, error_message='špatný požadavek'), 400
+
+# Running the Flask app directly
 if __name__ == '__main__':
     app.run(debug=True)

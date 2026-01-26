@@ -63,19 +63,12 @@
         <input type="text" name="kontakt_email_2" placeholder="heliodor@ctrnactka.cz" value="{{ kontakt_email_2 }}">
         <label for="kontakt_telefon_2">Telefon:</label>
         <input type="text" name="kontakt_telefon_2" placeholder="424 242 424" value="{{ kontakt_telefon_2 }}">
-        <br>
-        <br>
+        <br><br>
         <button type="submit" name="action" value="save">Uložit</button>
         <button type="submit" name="action" value="delete">Smazat</button>
-        <button type="submit" name="action" value="generate">Uložit a generovat</button>
-        {% if id %}
-        ID: {{ id }}
-        {% endif %}
+        <br><br>
+        <button type="submit" name="action" value="download_png">Stáhnout obrázek na stránky</button>
+        <button type="submit" name="action" value="download_pdf">Stáhnout PDF na tisk</button>
     </form>
-    {% if action == 'generate' %}
-        <br>
-        <a href="/download/png"><button type="button">Stáhnout obrázek na stránky</button></a>
-        <a href="/download/pdf"><button type="button">Stáhnout PDF na tisk</button></a>
-    {% endif %}
 </body>
 </html>

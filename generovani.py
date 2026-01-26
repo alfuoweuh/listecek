@@ -1,4 +1,3 @@
-# Import knihoven
 import os
 import io
 import jinja2
@@ -6,75 +5,71 @@ from weasyprint import HTML, CSS
 from pdf2image import convert_from_bytes
 from PIL import ImageChops
 
-# Načtení předgenerovaných base64 obrázků
-base_dir = os.path.dirname(os.path.abspath(__file__))
-with open(os.path.join(base_dir, 'header_obrazek.b64'), 'r') as f:
-    image_data = f.read()
-    image_path = f"data:image/jpeg;base64,{image_data}"
-with open(os.path.join(base_dir, 'header_nazev.b64'), 'r') as f:
-    header_data = f.read()
-    header_path = f"data:image/jpeg;base64,{header_data}"
+# Loading Base64 images with absolute paths
+dir_abs_path = os.path.dirname(os.path.abspath(__file__))
+with open(os.path.join(dir_abs_path, 'header_obrazek.b64'), 'r') as f:
+    image_bytes = f"data:image/jpeg;base64,{f.read()}"
+with open(os.path.join(dir_abs_path, 'header_nazev.b64'), 'r') as f:
+    header_bytes = f"data:image/jpeg;base64,{f.read()}"
 
-# Jinja2 jde do akce!
-env = jinja2.Environment(loader=jinja2.FileSystemLoader(base_dir))
+# Jinja2 is launching!
+env = jinja2.Environment(loader=jinja2.FileSystemLoader(dir_abs_path))
 
-def generate(data):
-    listecek_png = None
-    listecek_pdf = None
-    
-    # Přidání obrázků do slovníku data
-    data["image_path"] = image_path
-    data["header_path"] = header_path
+# Generating function
+def generate(data, type):    
+    # Adding image data to the data dictionary
+    data["image_bytes"] = image_bytes
+    data["header_bytes"] = header_bytes
 
-    # Generování HTML lístečků do paměti
-    vystupní_html_stranky = env.get_template('sablona_stranky.html').render(data)
-    vystupní_html_tisk = env.get_template('sablona_tisk.html').render(data)
+    # PNG generation
+    if  type == 'png':
+        try:
+            # Generating HTML
+            vystupní_html_stranky = env.get_template('sablona_stranky.html').render(data)
+            # Generating PDF from HTML
+            pdf_bytes = io.BytesIO()
+            HTML(string=vystupní_html_stranky).write_pdf(pdf_bytes, stylesheets=[CSS(string='@page { size: auto; margin: 0; }')])
+            pdf_bytes.seek(0)
+            # Convertig PDF to PNG
+            images = convert_from_bytes(pdf_bytes.read(), first_page=1, last_page=1, dpi=150)
+            # Automatic cropping of whitespace in the PNG
+            image = images[0]
+            inverted_image = ImageChops.invert(image.convert('L'))
+            bbox = inverted_image.getbbox()
+            listecek_png = image.crop(bbox)
+            # Saving PNG when running directly
+            if __name__ == '__main__':
+                listecek_png.save("listecek_stranky.png")
+                print("PNG na stránky vytvořen: 'listecek_stranky.png'")
+            else:
+                return listecek_png
+        except Exception as e:
+            print(f"Chyba při vytváření PNG: {e}")
+            listecek_png = None
 
-    # Generování PNG obrázku ze stránkového HTML
-    try:
-        # Vygenerování PDF do paměti
-        pdf_bytes = io.BytesIO()
-        HTML(string=vystupní_html_stranky).write_pdf(
-            pdf_bytes,
-            stylesheets=[CSS(string='@page { size: auto; margin: 0; }')])
-        pdf_bytes.seek(0)
-        # Konvertování PDF na PNG
-        images = convert_from_bytes(pdf_bytes.read(), first_page=1, last_page=1, dpi=150)
-        # Automatické oříznutí bílého místa
-        image = images[0]
-        inverted_image = ImageChops.invert(image.convert('L'))
-        bbox = inverted_image.getbbox()
-        if bbox:
-            image = image.crop(bbox)
-        if __name__ == '__main__':
-            image.save("listecek_stranky.png")
-        else:
-            listecek_png = image
-        print("PNG na stránky vytvořen: 'listecek_stranky.png'")
-    except Exception as e:
-        print(f"Chyba při vytváření PNG: {e}")
+    # A4 PDF generation
+    elif type == 'pdf':
+        try:
+            # Generating HTML
+            vystupní_html_tisk = env.get_template('sablona_tisk.html').render(data)
+            # Generating PDF from HTML
+            listecek_pdf = io.BytesIO()
+            HTML(string=vystupní_html_tisk).write_pdf(listecek_pdf)
+            # Saving PDF when running directly
+            if __name__ == '__main__':
+                with open("listecek_tisk.pdf", "wb") as f:
+                    f.write(listecek_pdf.getvalue())
+                print("PDF pro tisk vytvořen: 'listecek_tisk.pdf'")
+            else:
+                return listecek_pdf
+        except Exception as e:
+            print(f"Chyba při vytváření PDF: {e}")
+            listecek_pdf = None
 
-    # Generování A4 PDF pro tisk
-    try:
-        listecek_pdf = io.BytesIO()
-        HTML(string=vystupní_html_tisk).write_pdf(listecek_pdf)
-        if __name__ == '__main__':
-            with open("listecek_tisk.pdf", "wb") as f:
-                f.write(listecek_pdf.getvalue())
-        print("PDF pro tisk vytvořen: 'listecek_tisk.pdf'")
-    except Exception as e:
-        print(f"Chyba při vytváření PDF: {e}")
-
-    if __name__ != '__main__':
-        return listecek_png, listecek_pdf
-
-
+# Data input when running directly
 if __name__ == '__main__':
-    # Zadání dat
-    if True == True:
-        zadat = input("Vlastní data (Y/n)? ")
-    else:
-        zadat = "n"
+    zadat = input("Vlastní data (Y/n)? ")
+    
     if zadat in ['y', 'Y', 'yes', 'YES']:
         print("Pro přeskočení položky stiskněte Enter.")
         nazev_vypravy = input("Název výpravy: ")
@@ -197,4 +192,7 @@ if __name__ == '__main__':
                     {"jmeno": "Mýval", "telefon": "602 309 339", "email": "vrsecky.antonin@seznam.cz"}
                 ]
             }
-        generate(data)
+        
+        # Generating both PNG and PDF
+        generate(data, 'png')
+        generate(data, 'pdf')
