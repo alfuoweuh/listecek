@@ -167,7 +167,7 @@
                         <div>{{ sraz_misto }}</div>
                     </div>
                     <div class="col-half">
-                        <div class="label">návrat:</div>
+                        <div class="label">rozchod:</div>
                         <div>{{ rozchod_cas }}</div>
                         <div>{{ rozchod_misto }}</div>
                     </div>
@@ -192,28 +192,32 @@
                         {% endif %}
                         {% if penize %}
                         <p>
-                            <span class="label">cena:</span> {{ penize }}
+                            <span class="label">peníze:</span> {{ penize }}
                         </p>
                         {% endif %}
                         {% if poznamka %}
-                        <p class="poznamka-spacing-top{% if kontakty %} poznamka-spacing-bottom{% endif %}">
+                        <p class="poznamka-spacing-top{% if kontakt_jmeno_0 or kontakt_jmeno_1 or kontakt_jmeno_2 %} poznamka-spacing-bottom{% endif %}">
                             {{ poznamka }}
                         </p>
                         {% endif %}
                     </div>
 
                     <div class="contacts">
-                        {% for kontakt in kontakty %}
+                        {% if kontakt_jmeno_0 %}
                         <div>
-                            {{ kontakt.jmeno }}
-                            {%- set details = [] -%}
-                            {%- if kontakt.telefon %}{% set _ = details.append(kontakt.telefon) %}{% endif -%}
-                            {%- if kontakt.email %}{% set _ = details.append(kontakt.email) %}{% endif -%}
-                            {%- if details -%}
-                            : {{ details|join(', ') }}
-                            {%- endif -%}
+                            {{ kontakt_jmeno_0 }}{% if kontakt_telefon_0 or kontakt_email_0 %}: {{ [kontakt_telefon_0, kontakt_email_0]|select|join(', ') }}{% endif %}
                         </div>
-                        {% endfor %}
+                        {% endif %}
+                        {% if kontakt_jmeno_1 %}
+                        <div>
+                            {{ kontakt_jmeno_1 }}{% if kontakt_telefon_1 or kontakt_email_1 %}: {{ [kontakt_telefon_1, kontakt_email_1]|select|join(', ') }}{% endif %}
+                        </div>
+                        {% endif %}
+                        {% if kontakt_jmeno_2 %}
+                        <div>
+                            {{ kontakt_jmeno_2 }}{% if kontakt_telefon_2 or kontakt_email_2 %}: {{ [kontakt_telefon_2, kontakt_email_2]|select|join(', ') }}{% endif %}
+                        </div>
+                        {% endif %}
                     </div>
                 </div>
             </div>

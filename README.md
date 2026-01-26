@@ -9,4 +9,5 @@ pip3 install jinja2 weasyprint Pillow
 - [ ] přidat náhled na web (rovnou pomocí JavaScriptu)
 - [ ] přidat položky do formuláře (dva labely dle vlastního výběru, druhý řádek pro místo)
 - [ ] upravit formulace v listecek.html (aby odpovídaly těm na lístečku + čas a místo nadepsat )
+- [ ] sjednotit stejně tak názvy proměnných s názvy položek v lístečku
 - [ ] přidat CSS, aby to celé nějak vypadalo
