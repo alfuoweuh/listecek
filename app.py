@@ -1,9 +1,14 @@
-from flask import Flask, render_template, request
+from flask import Flask, render_template, request, send_file
 from datetime import datetime
 from tinydb import TinyDB, Query
+from generovani import generate
 
 app = Flask(__name__)
 db = TinyDB('listecky.json')
+
+# Globální proměnné pro uložené soubory
+listecek_png_cache = None
+listecek_pdf_cache = None
 
 
 @app.route('/', methods=['GET', 'POST'])
@@ -24,6 +29,8 @@ def vyber():
 
 @app.route('/listecek', methods=['GET', 'POST'])
 def listecek():
+    global listecek_png_cache, listecek_pdf_cache
+    
     if request.method == 'GET': # Button on the welcome page was pressed
         action = request.args.get('action')  # What button was pressed?
 
@@ -76,10 +83,26 @@ def listecek():
             else:
                 data['id'] = int(data['id'])
             db.upsert(data, Query().id == data['id'])
+        if action == 'generate':
+            listecek_png_cache, listecek_pdf_cache = generate(data)
         if action == 'delete':
             return render_template('smazat.html', **data)
         else:
-            return render_template('listecek.html', **data)
+            return render_template('listecek.html', action=action, **data)
+
+
+@app.route('/download/<file_type>')
+def download(file_type):
+    global listecek_png_cache, listecek_pdf_cache
+    
+    if file_type == 'png' and listecek_png_cache:
+        listecek_png_cache.save('listecek_stranky.png')
+        return send_file('listecek_stranky.png', as_attachment=True, download_name='listecek_stranky.png')
+    elif file_type == 'pdf' and listecek_pdf_cache:
+        listecek_pdf_cache.seek(0)
+        return send_file(listecek_pdf_cache, as_attachment=True, download_name='listecek_tisk.pdf', mimetype='application/pdf')
+    else:
+        return "Soubor není k dispozici", 404
 
 
 if __name__ == '__main__':

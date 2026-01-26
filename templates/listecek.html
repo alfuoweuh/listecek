@@ -68,13 +68,14 @@
         <button type="submit" name="action" value="save">Uložit</button>
         <button type="submit" name="action" value="delete">Smazat</button>
         <button type="submit" name="action" value="generate">Uložit a generovat</button>
-        {% if action == 'generate' %}
-        <button type="submit" name="action" value="download_png">Stáhnout obrázek na stránky</button>
-        <button type="submit" name="action" value="download_pdf">Stáhnout PDF na tisk</button>
-        {% endif %}
         {% if id %}
         ID: {{ id }}
         {% endif %}
     </form>
+    {% if action == 'generate' %}
+        <br>
+        <a href="/download/png"><button type="button">Stáhnout obrázek na stránky</button></a>
+        <a href="/download/pdf"><button type="button">Stáhnout PDF na tisk</button></a>
+    {% endif %}
 </body>
 </html>
