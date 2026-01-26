@@ -1,20 +1,27 @@
 # Import knihoven
+import os
+import io
 import jinja2
 from weasyprint import HTML, CSS
-import io
+from pdf2image import convert_from_bytes
+from PIL import ImageChops
 
 # Načtení předgenerovaných base64 obrázků
-with open('header_obrazek.b64', 'r') as f:
+base_dir = os.path.dirname(os.path.abspath(__file__))
+with open(os.path.join(base_dir, 'header_obrazek.b64'), 'r') as f:
     image_data = f.read()
     image_path = f"data:image/jpeg;base64,{image_data}"
-with open('header_nazev.b64', 'r') as f:
+with open(os.path.join(base_dir, 'header_nazev.b64'), 'r') as f:
     header_data = f.read()
     header_path = f"data:image/jpeg;base64,{header_data}"
 
 # Jinja2 jde do akce!
-env = jinja2.Environment(loader=jinja2.FileSystemLoader('.'))
+env = jinja2.Environment(loader=jinja2.FileSystemLoader(base_dir))
 
 def generate(data):
+    listecek_png = None
+    listecek_pdf = None
+    
     # Přidání obrázků do slovníku data
     data["image_path"] = image_path
     data["header_path"] = header_path
@@ -22,9 +29,6 @@ def generate(data):
     # Generování HTML lístečků do paměti
     vystupní_html_stranky = env.get_template('sablona_stranky.html').render(data)
     vystupní_html_tisk = env.get_template('sablona_tisk.html').render(data)
-
-    listecek_png = None
-    listecek_pdf = None
 
     # Generování PNG obrázku ze stránkového HTML
     try:
@@ -35,11 +39,9 @@ def generate(data):
             stylesheets=[CSS(string='@page { size: auto; margin: 0; }')])
         pdf_bytes.seek(0)
         # Konvertování PDF na PNG
-        from pdf2image import convert_from_bytes
         images = convert_from_bytes(pdf_bytes.read(), first_page=1, last_page=1, dpi=150)
         # Automatické oříznutí bílého místa
         image = images[0]
-        from PIL import ImageChops
         inverted_image = ImageChops.invert(image.convert('L'))
         bbox = inverted_image.getbbox()
         if bbox:

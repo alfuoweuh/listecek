@@ -1,10 +1,14 @@
+import os
+import io
 from flask import Flask, render_template, request, send_file
 from datetime import datetime
 from tinydb import TinyDB, Query
 from generovani import generate
 
 app = Flask(__name__)
-db = TinyDB('listecky.json')
+base_dir = os.path.dirname(os.path.abspath(__file__))
+db_path = os.path.join(base_dir, 'listecky.json')
+db = TinyDB(db_path)
 
 # Globální proměnné pro uložené soubory
 listecek_png_cache = None
@@ -96,8 +100,10 @@ def download(file_type):
     global listecek_png_cache, listecek_pdf_cache
     
     if file_type == 'png' and listecek_png_cache:
-        listecek_png_cache.save('listecek_stranky.png')
-        return send_file('listecek_stranky.png', as_attachment=True, download_name='listecek_stranky.png')
+        img_io = io.BytesIO()
+        listecek_png_cache.save(img_io, 'PNG')
+        img_io.seek(0)
+        return send_file(img_io, as_attachment=True, download_name='listecek_stranky.png', mimetype='image/png')
     elif file_type == 'pdf' and listecek_pdf_cache:
         listecek_pdf_cache.seek(0)
         return send_file(listecek_pdf_cache, as_attachment=True, download_name='listecek_tisk.pdf', mimetype='application/pdf')
