@@ -1,6 +1,6 @@
 import os
 import io
-from flask import Flask, render_template, request, send_file
+from flask import Flask, render_template, request, send_file, redirect, url_for
 from datetime import datetime
 from tinydb import TinyDB, Query
 from generovani import generate
@@ -29,7 +29,12 @@ def home():
 @app.route('/vyber', methods=['GET'])
 def vyber():
     action = request.args.get('action')
-    return render_template('vyber.html', action=action, listecky=db.all())
+        
+    # Sort by year (descending) and then by ID (descending)
+    listecky = db.all()
+    listecky.sort(key=lambda x: (int(x.get('rok', 0)) if str(x.get('rok', '')).isdigit() else 0, int(x.get('id', 0))), reverse=True)
+    
+    return render_template('vyber.html', action=action, listecky=listecky)
 
 
 # Form page
@@ -66,14 +71,20 @@ def listecek():
             "nazev_vypravy": request.form.get('nazev_vypravy', ''),
             "rok": request.form.get('rok', ''),
             "sraz_cas": request.form.get('sraz_cas', ''),
-            "sraz_misto": request.form.get('sraz_misto', ''),
-            "rozchod_cas": request.form.get('rozchod_cas', ''),
-            "rozchod_misto": request.form.get('rozchod_misto', ''),
+            "sraz_misto_1": request.form.get('sraz_misto_1', ''),
+            "sraz_misto_2": request.form.get('sraz_misto_2', ''),
+            "navrat_cas": request.form.get('navrat_cas', ''),
+            "navrat_misto_1": request.form.get('navrat_misto_1', ''),
+            "navrat_misto_2": request.form.get('navrat_misto_2', ''),
             "s_sebou": request.form.get('s_sebou', ''),
             "kdo_ma": request.form.get('kdo_ma', ''),
             "jidlo": request.form.get('jidlo', ''),
-            "penize": request.form.get('penize', ''),
+            "cena": request.form.get('cena', ''),
             "poznamka": request.form.get('poznamka', ''),
+            "label_vlastni_1": request.form.get('label_vlastni_1', ''),
+            "vlastni_1": request.form.get('vlastni_1', ''),
+            "label_vlastni_2": request.form.get('label_vlastni_2', ''),
+            "vlastni_2": request.form.get('vlastni_2', ''),
             "kontakt_jmeno_0": request.form.get('kontakt_jmeno_0', ''),
             "kontakt_telefon_0": request.form.get('kontakt_telefon_0', ''),
             "kontakt_email_0": request.form.get('kontakt_email_0', ''),
@@ -89,12 +100,14 @@ def listecek():
         action = request.form.get('action')
 
         # Saving data to DB
-        if action in ['save', 'download_png', 'download_pdf']:
-            if data['id'] == '':
-                data['id'] = max([int(item.get('id', 0)) for item in db.all() if item.get('id')]) + 1
-            else:
-                data['id'] = int(data['id'])
-            db.upsert(data, Query().id == data['id'])
+        if action in ['save', 'home', 'download_png', 'download_pdf']:
+            if any(value.strip() for key, value in data.items() if key != 'rok'):
+                if data['id'] == '':
+                    all_ids = [int(item.get('id', 0)) for item in db.all() if item.get('id')]
+                    data['id'] = max(all_ids) + 1 if all_ids else 1
+                else:
+                    data['id'] = int(data['id'])
+                db.upsert(data, Query().id == data['id'])
 
         # Generating files
         if action == 'download_png':
@@ -104,6 +117,10 @@ def listecek():
             listecek_pdf = generate(data, 'pdf')
             return stahnout('pdf', listecek_pdf)
 
+        # Going home
+        elif action == 'home':
+            return redirect(url_for('home'))
+        
         # Deleting data from DB
         elif action == 'delete':
             return render_template('smazat.html', **data)

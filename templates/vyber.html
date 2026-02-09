@@ -2,10 +2,10 @@
 <html lang="cs">
 <head>
     <meta charset="UTF-8">
-    <title>Rozšafný generátor lístečku</title>
+    <title>Rozšafný generátor lístečků</title>
 </head>
 <body>
-    <h1>{% if action == "template" %}Nechť si vyberou nějaký starý lísteček jako šablonu a vdechnou mu zpět s novými daty život.{% elif action == "open" %}Nechť si vyberou, jaký lísteček jest jim po chuti upraviti.{% endif %}</h1>
+    <h1>{% if action == "template" %}Nechť si vyberou nějaký starý lísteček jako šablonu a vdechnou mu zpět život.{% elif action == "open" %}Nechť si vyberou, jaký lísteček jest jim po chuti upraviti.{% endif %}</h1>
     {% for listecek in listecky %}
     <form method="GET" action="/listecek">
         <label>{{ listecek.nazev_vypravy }} – {{ listecek.rok }}</label>
