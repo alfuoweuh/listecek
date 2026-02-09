@@ -5,7 +5,8 @@
     <title>Lísteček {{ nazev_vypravy }}</title>
 </head>
 <body>
-    <h1>Rozšafný generátor lístečku</h1>
+    <h1>Nechť zadají vše potřebné, stáhnou si lísteček a pak si užijí výpravu!</h1>
+    <h3>Jen pozor, ať si jej nezavřou neuložený a nepřijdou zbytečně o práci!</h2>
     <form method="POST" action="/listecek">
         <input type="hidden" name="id" value="{{ id }}">
         <label for="nazev_vypravy">Název výpravy:</label>
@@ -15,16 +16,22 @@
         <input type="text" name="rok" placeholder="1968" value="{{ rok }}">
         <br><br>
         <label for="sraz_cas">Čas srazu:</label>
-        <input type="text" name="sraz_cas" placeholder="pátek 13. 13. v 13:13" value="{{ sraz_cas }}">
+        <input type="text" name="sraz_cas" placeholder="v pátek 13. 13. v 13:13" value="{{ sraz_cas }}">
         <br>
-        <label for="sraz_misto">Místo srazu:</label>
-        <input type="text" name="sraz_misto" placeholder="na Hlavním nádraží" value="{{ sraz_misto }}">
+        <label for="sraz_misto_1">Místo srazu (1. řádek):</label>
+        <input type="text" name="sraz_misto_1" placeholder="na Hlavním nádraží" value="{{ sraz_misto_1 }}">
+        <br>
+        <label for="sraz_misto_2">Místo srazu (2. řádek):</label>
+        <input type="text" name="sraz_misto_2" placeholder="pod odjezdovou tabulí" value="{{ sraz_misto_2 }}">
         <br><br>
-        <label for="rozchod_cas">Čas rozchodu:</label>
-        <input type="text" name="rozchod_cas" placeholder="neděle 15.13 v 13:13" value="{{ rozchod_cas }}">
+        <label for="navrat_cas">Čas návratu:</label>
+        <input type="text" name="navrat_cas" placeholder="v neděli 15.13 v 13:13" value="{{ navrat_cas }}">
         <br>
-        <label for="rozchod_misto">Místo rozchodu:</label>
-        <input type="text" name="rozchod_misto" placeholder="tamtéž" value="{{ rozchod_misto }}">
+        <label for="navrat_misto_1">Místo návratu (1. řádek):</label>
+        <input type="text" name="navrat_misto_1" placeholder="tamtéž" value="{{ navrat_misto_1 }}">
+        <br>
+        <label for="navrat_misto_2">Místo návratu (2. řádek):</label>
+        <input type="text" name="navrat_misto_2" placeholder="" value="{{ navrat_misto_2 }}">
         <br><br>
         <label for="s_sebou">S sebou:</label>
         <textarea name="s_sebou" rows="4" cols="50" placeholder="věci na vícedenní výpravu, prskavky…">{{ s_sebou }}</textarea>
@@ -35,11 +42,23 @@
         <label for="jidlo">Jídlo:</label>
         <textarea name="jidlo" rows="4" cols="50" placeholder="páteční večeři, snídaně, studený sobotní oběd; jinak bude k dispozici horká voda">{{ jidlo }}</textarea>
         <br>
-        <label for="penize">Peníze:</label>
-        <input type="text" name="penize" placeholder="100 Kč" value="{{ penize }}">
+        <label for="cena">Cena:</label>
+        <input type="text" name="cena" placeholder="100 Kč" value="{{ cena }}">
         <br>
         <label for="poznamka">Poznámka:</label>
         <textarea name="poznamka" rows="4" cols="50" placeholder="Další důležité informace...">{{ poznamka }}</textarea>
+        <br><br>
+        <label>Vlastní pole 1:</label><br>
+        <label for="label_vlastni_1">Label:</label>
+        <input type="text" name="label_vlastni_1" placeholder="vlastní label" value="{{ label_vlastni_1 }}">
+        <label for="vlastni_1">Text:</label>
+        <input type="text" name="vlastni_1" placeholder="vlastní text" value="{{ vlastni_1 }}">
+        <br>
+        <label>Vlastní pole 2:</label><br>
+        <label for="label_vlastni_2">Label:</label>
+        <input type="text" name="label_vlastni_2" placeholder="vlastní label" value="{{ label_vlastni_2 }}">
+        <label for="vlastni_2">Text:</label>
+        <input type="text" name="vlastni_2" placeholder="vlastní text" value="{{ vlastni_2 }}">
         <br><br>
         <label>Kontakty:</label>
         <br>
@@ -66,6 +85,7 @@
         <br><br>
         <button type="submit" name="action" value="save">Uložit</button>
         <button type="submit" name="action" value="delete">Smazat</button>
+        <button type="submit" name="action" value="home">Domů</button>
         <br><br>
         <button type="submit" name="action" value="download_png">Stáhnout obrázek na stránky</button>
         <button type="submit" name="action" value="download_pdf">Stáhnout PDF na tisk</button>

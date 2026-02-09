@@ -130,12 +130,14 @@
             <div class="col-half">
                 <div class="label">sraz:</div>
                 <div>{{ sraz_cas }}</div>
-                <div>{{ sraz_misto }}</div>
+                <div>{{ sraz_misto_1 }}</div>
+                <div>{{ sraz_misto_2 }}</div>
             </div>
             <div class="col-half">
-                <div class="label">rozchod:</div>
-                <div>{{ rozchod_cas }}</div>
-                <div>{{ rozchod_misto }}</div>
+                <div class="label">návrat:</div>
+                <div>{{ navrat_cas }}</div>
+                <div>{{ navrat_misto_1 }}</div>
+                <div>{{ navrat_misto_2 }}</div>
             </div>
         </div>
 
@@ -156,9 +158,19 @@
                     <span class="label">jídlo:</span> {{ jidlo }}
                 </p>
                 {% endif %}
-                {% if penize %}
+                {% if cena %}
                 <p>
-                    <span class="label">peníze:</span> {{ penize }}
+                    <span class="label">cena:</span> {{ cena }}
+                </p>
+                {% endif %}
+                {% if vlastni_1 %}
+                <p>
+                    <span class="label">{{ label_vlastni_1 if label_vlastni_1 else 'vlastní' }}:</span> {{ vlastni_1 }}
+                </p>
+                {% endif %}
+                {% if vlastni_2 %}
+                <p>
+                    <span class="label">{{ label_vlastni_2 if label_vlastni_2 else 'vlastní' }}:</span> {{ vlastni_2 }}
                 </p>
                 {% endif %}
                 {% if poznamka %}
