@@ -1,0 +1,765 @@
+/* ============================================================
+   MATERIAL DESIGN 3 - EARTH / PLAYFUL THEME
+   Jednotný styling pro celou aplikaci
+   ============================================================ */
+
+/* --- CSS PROMĚNNÉ (TOKENS) --- */
+:root {
+    /* Barva palety: Brown/Terracotta (hravý, příjemný design) */
+    --md-sys-color-primary: #8C4F27;
+    --md-sys-color-on-primary: #FFFFFF;
+    --md-sys-color-primary-container: #FFDBC9;
+    --md-sys-color-on-primary-container: #341100;
+
+    --md-sys-color-secondary: #765748;
+    --md-sys-color-on-secondary: #FFFFFF;
+    --md-sys-color-secondary-container: #FFDCC1;
+    --md-sys-color-on-secondary-container: #2E1511;
+
+    /* Hravé barvy pro sekce */
+    --md-sys-color-tertiary: #5F8C3C;
+    --md-sys-color-tertiary-container: #E4EFE0; /* Jemně zelená pro logistiku */
+    --md-sys-color-on-tertiary-container: #2d4f29;
+
+    --md-sys-color-quaternary: #9C6B40;
+    --md-sys-color-quaternary-container: #FFF4E0; /* Jemně žlutá pro obsah */
+    --md-sys-color-on-quaternary-container: #6e4e10;
+
+    --md-sys-color-surface: #FDF8F6;
+    --md-sys-color-surface-variant: #F4DED4;
+    --md-sys-color-on-surface: #201A17;
+    --md-sys-color-on-surface-variant: #52443C;
+    
+    --md-sys-color-outline: #85736B;
+    --md-sys-color-outline-variant: #D7C2B9;
+    --md-sys-color-error: #ba1a1a;
+    --md-sys-color-on-error: #FFFFFF;
+
+    /* Poloměry rohů */
+    --md-radius-small: 8px;
+    --md-radius-medium: 16px;
+    --md-radius-large: 24px;
+
+    /* Stíny */
+    --md-shadow-1: 0 1px 3px rgba(0, 0, 0, 0.12), 0 1px 2px rgba(0, 0, 0, 0.24);
+    --md-shadow-2: 0 3px 6px rgba(0, 0, 0, 0.15), 0 2px 4px rgba(0, 0, 0, 0.12);
+    --md-shadow-3: 0 10px 20px rgba(0, 0, 0, 0.15), 0 3px 6px rgba(0, 0, 0, 0.10);
+}
+
+/* --- ZÁKLADNÍ NASTAVENÍ --- */
+* {
+    box-sizing: border-box;
+}
+
+html, body {
+    margin: 0;
+    padding: 0;
+}
+
+body {
+    font-family: 'Roboto', -apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Arial, sans-serif;
+    background-color: var(--md-sys-color-surface);
+    color: var(--md-sys-color-on-surface);
+    line-height: 1.5;
+    padding: 20px;
+    display: flex;
+    justify-content: center;
+}
+
+/* --- KONTEJNERY --- */
+.main-container {
+    max-width: 900px;
+    width: 100%;
+    background-color: #fff;
+    padding: 30px;
+    border-radius: var(--md-radius-large);
+    box-shadow: var(--md-shadow-2);
+}
+
+.listecek-container {
+    text-align: left;
+}
+
+/* Wrapper pro jednoduché stránky (index, vyber, smazat, chyba) */
+body > h1:first-child + *:not(.main-container),
+body > h1:not(:first-child) {
+    display: contents;
+}
+
+/* Zvlášť pro stránky bez .main-container */
+body:has(> h1:first-child) {
+    flex-direction: column;
+    align-items: center;
+}
+
+body > h1,
+body > form {
+    max-width: 600px;
+    width: 100%;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+/* --- TYPOGRAFIE --- */
+h1 {
+    font-size: 28px;
+    line-height: 36px;
+    color: var(--md-sys-color-on-surface);
+    margin-top: 0;
+    margin-bottom: 24px;
+    font-weight: 500;
+    text-align: center;
+}
+
+h2 {
+    font-size: 22px;
+    line-height: 28px;
+    color: var(--md-sys-color-on-surface);
+    margin: 24px 0 16px 0;
+    font-weight: 500;
+}
+
+h3 {
+    font-size: 16px;
+    font-weight: 400;
+    color: var(--md-sys-color-on-surface-variant);
+    margin: 0 0 30px 0;
+    text-align: center;
+}
+
+h4 {
+    font-size: 14px;
+    font-weight: 500;
+    color: var(--md-sys-color-on-surface);
+    margin: 0;
+}
+
+label {
+    font-size: 14px;
+    font-weight: 500;
+    color: var(--md-sys-color-on-surface);
+    display: block;
+    margin-bottom: 8px;
+}
+
+/* --- FORMULÁŘE --- */
+form {
+    margin: 20px 0;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+/* Grid pro formulář /listecek */
+.form-grid {
+    gap: 24px;
+}
+
+/* --- VSTUPY A TEXTAREA --- */
+input[type="text"],
+input[type="email"],
+input[type="password"],
+textarea {
+    width: 100%;
+    padding: 10px 12px;
+    font-size: 16px;
+    font-family: 'Roboto', sans-serif;
+    color: var(--md-sys-color-on-surface);
+    background-color: transparent;
+    border: 1px solid var(--md-sys-color-outline);
+    border-radius: var(--md-radius-small);
+    transition: border-color 0.2s, box-shadow 0.2s;
+    appearance: none;
+}
+
+input[type="text"]::placeholder,
+input[type="email"]::placeholder,
+input[type="password"]::placeholder,
+textarea::placeholder {
+    color: var(--md-sys-color-on-surface-variant);
+    opacity: 0.5;
+}
+
+input[type="text"]:focus,
+input[type="email"]:focus,
+input[type="password"]:focus,
+textarea:focus {
+    outline: none;
+    border-color: var(--md-sys-color-primary);
+    border-width: 2px;
+    padding: 9px 11px;
+    box-shadow: 0 0 0 3px rgba(140, 79, 39, 0.1);
+}
+
+textarea {
+    resize: vertical;
+    min-height: 100px;
+    line-height: 1.5;
+}
+
+#s_sebou {
+    min-height: 150px;
+}
+
+/* --- SKUPINY VSTUPŮ (MD3 Moving Label Style) --- */
+.input-group {
+    position: relative;
+    margin-bottom: 12px;
+}
+
+.input-group:last-child {
+    margin-bottom: 0;
+}
+
+.input-group label.md-label {
+    position: absolute;
+    left: 12px;
+    top: -10px;
+    background-color: #fff;
+    padding: 0 4px;
+    font-size: 12px;
+    color: var(--md-sys-color-primary);
+    font-weight: 500;
+}
+
+/* Barvy labelů v barevných sekcích */
+.section-header label.md-label {
+    background-color: var(--md-sys-color-primary-container);
+}
+
+.section-logistics label.md-label {
+    background-color: var(--md-sys-color-tertiary-container);
+    color: var(--md-sys-color-on-tertiary-container);
+}
+
+.section-content label.md-label {
+    background-color: var(--md-sys-color-quaternary-container);
+    color: var(--md-sys-color-on-quaternary-container);
+}
+
+.section-card:not(.section-header):not(.section-logistics):not(.section-content) label.md-label {
+    background-color: var(--md-sys-color-surface);
+}
+
+.custom-fields label.md-label {
+    background-color: #FFF0F5;
+}
+
+/* --- SEKCE (CARDS) --- */
+.section-card {
+    background-color: var(--md-sys-color-surface);
+    border: 1px solid var(--md-sys-color-outline-variant);
+    border-radius: var(--md-radius-medium);
+    padding: 16px;
+    position: relative;
+}
+
+.section-card + .section-card {
+    margin-top: 16px;
+}
+
+/* Barevné tónování sekcí */
+.section-header {
+    background-color: var(--md-sys-color-primary-container);
+    border: none;
+}
+
+.section-logistics {
+    background-color: var(--md-sys-color-tertiary-container);
+    border: none;
+}
+
+.section-content {
+    background-color: var(--md-sys-color-quaternary-container);
+    border: none;
+}
+
+/* --- LAYOUTY --- */
+.row-header {
+    display: flex;
+    gap: 16px;
+    align-items: flex-start;
+}
+
+.col-grow {
+    flex: 1;
+}
+
+.col-small {
+    width: 120px;
+    flex-shrink: 0;
+}
+
+.row-logistics {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 32px;
+}
+
+.column {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+/* --- CUSTOM FIELDS (ACCORDION) --- */
+details.custom-fields {
+    background-color: #F8D7E8;
+    border: 1px solid var(--md-sys-color-outline);
+    border-radius: var(--md-radius-medium);
+    overflow: hidden;
+    transition: all 0.3s ease;
+}
+
+details.custom-fields summary {
+    padding: 12px 16px;
+    cursor: pointer;
+    font-weight: 500;
+    color: var(--md-sys-color-on-surface);
+    list-style: none;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    user-select: none;
+}
+
+details.custom-fields summary:hover {
+    background-color: #F8D7E8;
+}
+
+details.custom-fields summary::after {
+    content: '+';
+    font-size: 20px;
+    font-weight: bold;
+    color: var(--md-sys-color-primary);
+}
+
+details.custom-fields[open] summary::after {
+    content: '−';
+}
+
+.custom-fields-content {
+    padding: 16px;
+    background-color: #FFF0F5;
+    border-top: 1px solid var(--md-sys-color-outline-variant);
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+.custom-row {
+    display: flex;
+    gap: 16px;
+    align-items: flex-start;
+}
+
+.custom-row .label-input {
+    flex: 1;
+}
+
+.custom-row .text-input {
+    flex: 2;
+}
+
+/* --- TLAČÍTKA --- */
+button {
+    border: none;
+    padding: 10px 24px;
+    border-radius: 20px;
+    font-size: 14px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: background-color 0.2s, box-shadow 0.2s, transform 0.1s;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 80px;
+    min-height: 40px;
+}
+
+button:hover {
+    transform: translateY(-1px);
+    box-shadow: var(--md-shadow-2);
+}
+
+button:active {
+    transform: translateY(0);
+}
+
+/* Primární tlačítko - Uložit */
+button[value="save"],
+button[value="yes_delete"],
+button[value="new"] {
+    background-color: var(--md-sys-color-primary);
+    color: var(--md-sys-color-on-primary);
+}
+
+button[value="save"]:hover {
+    background-color: #723b1a;
+}
+
+button[value="yes_delete"]:hover,
+button[value="new"]:hover {
+    background-color: #723b1a;
+}
+
+/* Chybové tlačítko - Smazat */
+button[value="delete"] {
+    background-color: var(--md-sys-color-error);
+    color: var(--md-sys-color-on-error);
+}
+
+button[value="delete"]:hover {
+    background-color: #9b1f1f;
+}
+
+/* Sekundární tlačítka - Ostatní */
+button[value="home"],
+button[value="open"],
+button[value="download_png"],
+button[value="download_pdf"],
+button[value="template"],
+button[value="no_delete"] {
+    background-color: var(--md-sys-color-secondary-container);
+    color: var(--md-sys-color-on-secondary-container);
+}
+
+button[value="home"]:hover,
+button[value="open"]:hover,
+button[value="download_png"]:hover,
+button[value="download_pdf"]:hover,
+button[value="template"]:hover,
+button[value="no_delete"]:hover {
+    background-color: #e6c5aa;
+}
+
+/* --- AKCE (TLAČÍTKA NA FORMULÁŘI) --- */
+.actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 12px;
+    margin-top: 32px;
+    padding-top: 20px;
+    border-top: 1px solid var(--md-sys-color-outline-variant);
+}
+
+.actions .spacer {
+    flex-grow: 1;
+}
+
+/* --- VARIANT HNĚDÉ PRO INDEX --- */
+button[value="new"] {
+    background-color: var(--md-sys-color-secondary-container);
+    color: var(--md-sys-color-on-secondary-container);
+}
+
+button[value="new"]:hover {
+    background-color: #e6c5aa;
+}
+
+button[value="open"] {
+    background-color: var(--md-sys-color-secondary-container);
+    color: var(--md-sys-color-on-secondary-container);
+}
+
+button[value="open"]:hover {
+    background-color: #e6c5aa;
+}
+
+button[value="template"] {
+    background-color: var(--md-sys-color-secondary-container);
+    color: var(--md-sys-color-on-secondary-container);
+}
+
+button[value="template"]:hover {
+    background-color: #e6c5aa;
+}
+
+/* --- SEZNAM ZÁZNAMŮ (VYBER) --- */
+.list-item {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    background-color: var(--md-sys-color-secondary-container);
+    border: none;
+    border-radius: 12px;
+    padding: 16px;
+    margin-bottom: 12px;
+    gap: 12px;
+}
+
+.list-item-info {
+    flex: 1;
+}
+
+.list-item-info label {
+    margin: 0;
+    font-size: 16px;
+    font-weight: 500;
+    color: var(--md-sys-color-on-secondary-container);
+}
+
+.list-item-button {
+    flex-shrink: 0;
+}
+
+.list-item-button button {
+    min-width: 50px;
+    min-height: 44px;
+    border-radius: 12px;
+    padding: 8px 16px;
+    background-color: var(--md-sys-color-primary);
+    color: var(--md-sys-color-on-primary);
+}
+
+.list-item-button button:hover {
+    background-color: #723b1a;
+}
+
+/* --- SMAZAT STRÁNKA --- */
+.delete-buttons {
+    display: flex;
+    gap: 12px;
+    margin-top: 20px;
+}
+
+.delete-buttons form {
+    flex: 1.2;
+    margin: 0;
+}
+
+.delete-buttons button {
+    width: 100%;
+    height: 48px;
+    font-size: 16px;
+    padding: 10px 30px;
+}
+
+button[value="yes_delete"] {
+    background-color: #C62B2B;
+    color: white;
+}
+
+button[value="yes_delete"]:hover {
+    background-color: #B02020;
+}
+
+button[value="no_delete"] {
+    background-color: #2E7D32;
+    color: white;
+}
+
+button[value="no_delete"]:hover {
+    background-color: #237F26;
+}
+
+/* --- DOMŮ TLAČÍTKO V CHYBĚ --- */
+button.btn-home {
+    background-color: #6B4323;
+    color: white;
+    margin-top: 20px;
+}
+
+button.btn-home:hover {
+    background-color: #5A3A1C;
+}
+
+/* ---INPUTY VEDLE SEBE (PRO KONTAKTY) --- */
+.contact-row {
+    display: flex;
+    gap: 10px;
+    flex-wrap: wrap;
+    margin-bottom: 12px;
+}
+
+.contact-row .input-group {
+    margin-bottom: 0;
+}
+
+.contact-row .input-group[style*="flex:1"]:last-child,
+.contact-row .input-group:last-child {
+    margin-bottom: 0;
+}
+
+/* --- INPUT SKUPINY VEDLE SEBE --- */
+div[style*="display: flex"][style*="gap: 10px"] .input-group {
+    position: relative;
+    flex: 1;
+    min-width: 150px;
+}
+
+/* --- RESPONZIVITA --- */
+@media (max-width: 700px) {
+    body {
+        padding: 0;
+    }
+
+    .main-container {
+        max-width: 100%;
+        border-radius: 0;
+        box-shadow: none;
+        padding: 20px;
+    }
+
+    h1 {
+        font-size: 24px;
+        line-height: 32px;
+        margin-bottom: 16px;
+    }
+
+    h3 {
+        font-size: 14px;
+        margin-bottom: 20px;
+    }
+
+    /* Formulář - stackování */
+    .form-grid {
+        gap: 16px;
+    }
+
+    /* Logistika - jeden sloupec */
+    .row-logistics {
+        grid-template-columns: 1fr;
+        gap: 16px;
+    }
+
+    /* Header - stackování */
+    .row-header {
+        flex-direction: column;
+    }
+
+    .col-small {
+        width: 100%;
+    }
+
+    /* Custom fields */
+    .custom-row {
+        flex-direction: column;
+        gap: 8px;
+    }
+
+    .custom-row .label-input,
+    .custom-row .text-input {
+        width: 100%;
+        flex: none;
+    }
+
+    /* Kontakty - stackování na mobilu */
+    div[style*="display: flex"][style*="gap: 10px"] {
+        flex-direction: column !important;
+        margin-bottom: 24px !important;
+    }
+
+    div[style*="display: flex"][style*="gap: 10px"] .input-group {
+        min-width: 100% !important;
+        flex-basis: 100% !important;
+        margin-bottom: 16px;
+    }
+
+    /* Tlačítka - fullwidth na mobilu */
+    button {
+        width: 100%;
+    }
+
+    .actions {
+        flex-direction: column;
+        gap: 8px;
+    }
+
+    .actions .spacer {
+        display: none;
+    }
+
+    /* Sekce - méně paddingu */
+    .section-card {
+        padding: 12px;
+    }
+
+    .custom-fields-content {
+        padding: 12px;
+    }
+}
+
+@media (max-width: 480px) {
+    body {
+        padding: 10px;
+    }
+
+    .main-container {
+        padding: 15px;
+    }
+
+    h1 {
+        font-size: 20px;
+        line-height: 28px;
+    }
+
+    h4 {
+        font-size: 12px;
+    }
+
+    input[type="text"],
+    textarea {
+        font-size: 16px; /* Zabraňuje zoomování na iOS */
+    }
+
+    button {
+        padding: 8px 20px;
+        font-size: 12px;
+        min-width: 70px;
+    }
+}
+
+/* --- PODPORUJE TMAVÝ MÓD --- */
+@media (prefers-color-scheme: dark) {
+    :root {
+        --md-sys-color-surface: #1a1a1a;
+        --md-sys-color-on-surface: #ffe8d6;
+        --md-sys-color-on-surface-variant: #cdb4a6;
+        --md-sys-color-outline: #9a8b84;
+    }
+
+    body {
+        background-color: var(--md-sys-color-surface);
+    }
+
+    .main-container {
+        background-color: #262626;
+    }
+
+    input[type="text"],
+    input[type="email"],
+    textarea {
+        background-color: #1a1a1a;
+        color: var(--md-sys-color-on-surface);
+        border-color: #4a4a4a;
+    }
+
+    .section-card {
+        background-color: #262626;
+    }
+
+    details.custom-fields {
+        background-color: #262626;
+    }
+
+    .custom-fields-content {
+        background-color: #1a1a1a;
+    }
+
+    label.md-label {
+        background-color: #262626;
+    }
+
+    .section-header label.md-label {
+        background-color: #4a3228;
+    }
+
+    .section-logistics label.md-label {
+        background-color: #324a2f;
+    }
+
+    .section-content label.md-label {
+        background-color: #4a3a1a;
+    }
+}
