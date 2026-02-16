@@ -3,6 +3,9 @@
 <head>
     <meta charset="UTF-8">
     <title>Lísteček {{ nazev_vypravy }}</title>
+    {% if download_url %}
+    <meta http-equiv="refresh" content="0;url={{ download_url }}">
+    {% endif %}
 </head>
 <body>
     <h1>Nechť zadají vše potřebné, stáhnou si lísteček a pak si užijí výpravu!</h1>

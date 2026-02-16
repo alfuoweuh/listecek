@@ -13,7 +13,7 @@ Pro spuštění webové aplikace je třeba dále nainstalovat:
 pip3 install flask tinydb
 ```
 
-Vylepšení:
+### Plány na vylepšení:
 - [ ] vylepšit (spíš udělat nové) CSS
 - [ ] automatické zálohování databáze
 - [ ] automatické přizpůsobení motivu (světlý/tmavý) podle nastavení zařízení
