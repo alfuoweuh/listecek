@@ -109,13 +109,13 @@ def listecek():
                     data['id'] = int(data['id'])
                 db.upsert(data, Query().id == data['id'])
 
-        # Generating files
+        # Downloading files
         if action == 'download_png':
-            listecek_png = generate(data, 'png')
-            return stahnout('png', listecek_png)
+            download_url = url_for('stahnout', id=data['id'], file_type='png')
+            return render_template('listecek.html', download_url=download_url, **data)
         elif action == 'download_pdf':
-            listecek_pdf = generate(data, 'pdf')
-            return stahnout('pdf', listecek_pdf)
+            download_url = url_for('stahnout', id=data['id'], file_type='pdf')
+            return render_template('listecek.html', download_url=download_url, **data)
 
         # Going home
         elif action == 'home':
@@ -130,17 +130,28 @@ def listecek():
             return render_template('listecek.html', action=action, **data)
 
 # Downloading files
-@app.route('/stahnout')
-def stahnout(file_type, listecek_bytes):
-    if file_type == 'png' and listecek_bytes:
-        img_io = io.BytesIO()
-        listecek_bytes.save(img_io, 'PNG')
-        img_io.seek(0)
-        return send_file(img_io, as_attachment=True, download_name='listecek_stranky.png', mimetype='image/png')
-    
-    elif file_type == 'pdf' and listecek_bytes:
-        listecek_bytes.seek(0)
-        return send_file(listecek_bytes, as_attachment=True, download_name='listecek_tisk.pdf', mimetype='application/pdf')
+@app.route('/stahnout/<int:id>/<file_type>')
+def stahnout(id, file_type):
+    data = db.get(Query().id == id)
+    if data:
+        if file_type == 'png':
+            img_io = io.BytesIO()
+            generate(data, file_type).save(img_io, 'PNG')
+            img_io.seek(0)
+            return send_file(img_io, as_attachment=True, download_name='listecek_stranky.png', mimetype='image/png')
+        
+        elif file_type == 'pdf':
+            pdf_io = generate(data, file_type)
+            pdf_io.seek(0)
+            return send_file(pdf_io, as_attachment=True, download_name='listecek_tisk.pdf', mimetype='application/pdf')
+
+# Routes for Search Engine and Google verification files (in root of domain)
+@app.route('/robots.txt')
+def robots():
+    return send_file(os.path.join(dir_abs_path, 'static', 'robots.txt'), mimetype='text/plain')
+@app.route('/googlebaa1f5ca80014a9d.html')
+def google_verification():
+    return send_file(os.path.join(dir_abs_path, 'static', 'googlebaa1f5ca80014a9d.html'), mimetype='text/html')
 
 # Error handlers
 @app.errorhandler(404)

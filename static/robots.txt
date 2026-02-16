@@ -1,0 +1,8 @@
+# Rozšafný generátor lístečků
+# Tags: lísteček, Skarabeus, generátor, Fred, výpravy, oddíl
+# Author: Fred, alfuoweuh
+# Web pro generování lístečků oddílu Skarabeus: skarabeus.ctrnactka.cz.
+
+User-agent: *
+Allow: /
+Disallow: /static/
