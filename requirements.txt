@@ -1,0 +1,6 @@
+jinja2
+weasyprint
+Pillow
+pdf2image
+flask
+tinydb
