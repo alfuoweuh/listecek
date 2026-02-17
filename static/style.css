@@ -713,10 +713,45 @@ div[style*="display: flex"][style*="gap: 10px"] .input-group {
 /* --- PODPORUJE TMAVÝ MÓD --- */
 @media (prefers-color-scheme: dark) {
     :root {
-        --md-sys-color-surface: #1a1a1a;
-        --md-sys-color-on-surface: #ffe8d6;
-        --md-sys-color-on-surface-variant: #cdb4a6;
-        --md-sys-color-outline: #9a8b84;
+        --md-sys-color-surface: #1e1b19;         /* Tmavá "cihlová" hnědá (Dark Reader style) */
+        --md-sys-color-on-surface: #e8e6e3;      /* Dark Reader Text */
+        --md-sys-color-surface-variant: #2e2825; /* Mírně světlejší pozadí pro karty */
+        --md-sys-color-on-surface-variant: #b2aba1; /* Placeholder text */
+        
+        --md-sys-color-outline: #7d726b;         /* Dark Reader Border */
+        --md-sys-color-outline-variant: #545b5e;
+
+        /* 
+           SYTÉ BAREVNÉ KONTEJNERY (High Contrast Dark)
+           Pozadí je sytá, zemitá barva (méně pastelová).
+           Text je velmi světlý pro maximální čitelnost.
+        */
+
+        /* Primary - Header (Hluboká cihlová) */
+        --md-sys-color-primary: #ffdbc9; /* Barva labelu (světlá) */
+        --md-sys-color-on-primary: #341100; 
+        --md-sys-color-primary-container: #542a16; /* Tmavá zemitá hnědá */
+        --md-sys-color-on-primary-container: #ffffff; /* Bílý text pro kontrast */
+
+        /* Secondary - Buttons */
+        --md-sys-color-secondary: #ffdcc1;
+        --md-sys-color-on-secondary: #2E1511;
+        --md-sys-color-secondary-container: #4a2e26; /* Tmavá hnědá */
+        --md-sys-color-on-secondary-container: #ffffff;
+
+        /* Tertiary - Logistics (Hluboká lesní zelená) */
+        --md-sys-color-tertiary: #cdefba; /* Barva labelu (světlá) */
+        --md-sys-color-tertiary-container: #26331b; /* Tmavá olivová/lesní */
+        --md-sys-color-on-tertiary-container: #ffffff; /* Bílý text */
+
+        /* Quaternary - Content (Hluboká bronzová) */
+        --md-sys-color-quaternary: #ffddb0; /* Barva labelu (světlá) */
+        --md-sys-color-quaternary-container: #423010; /* Tmavá bronzová */
+        --md-sys-color-on-quaternary-container: #ffffff; /* Bílý text */
+        
+        /* Error */
+        --md-sys-color-error: #ffb4ab;
+        --md-sys-color-on-error: #690005;
     }
 
     body {
@@ -724,42 +759,88 @@ div[style*="display: flex"][style*="gap: 10px"] .input-group {
     }
 
     .main-container {
-        background-color: #262626;
+        background-color: var(--md-sys-color-surface); /* Dark Reader často sjednotí pozadí */
+        box-shadow: none; /* V tmavém režimu stíny často ruší, nebo nejsou vidět */
+        border: 1px solid var(--md-sys-color-outline-variant);
     }
 
     input[type="text"],
     input[type="email"],
+    input[type="password"],
     textarea {
-        background-color: #1a1a1a;
+        background-color: transparent; /* Průhledné, aby splynuly se sekcí (jako ve světlém) */
         color: var(--md-sys-color-on-surface);
-        border-color: #4a4a4a;
+        border-color: var(--md-sys-color-outline);
     }
 
+    /* Obecné pozadí pro karty (např. Kontakty) */
     .section-card {
-        background-color: #262626;
+        background-color: var(--md-sys-color-surface-variant);
+        border-color: var(--md-sys-color-outline-variant);
     }
 
-    details.custom-fields {
-        background-color: #262626;
+    /* OPRAVA: Vynucení barevného pozadí pro hlavní sekce, aby nebyly přebity obecnou kartou výše */
+    .section-header {
+        background-color: var(--md-sys-color-primary-container);
+    }
+    .section-logistics {
+        background-color: var(--md-sys-color-tertiary-container);
+    }
+    .section-content {
+        background-color: var(--md-sys-color-quaternary-container);
+    }
+    
+    /* Oprava pro Kontakty (obecná karta) - labely musí mít barvu surface-variant */
+    .section-card:not(.section-header):not(.section-logistics):not(.section-content) label.md-label {
+        background-color: var(--md-sys-color-surface-variant);
+        color: var(--md-sys-color-primary);
     }
 
-    .custom-fields-content {
-        background-color: #1a1a1a;
-    }
-
+    /* Oprava pozadí labelů - musí přesně sedět na barvu kontejneru pod ním */
     label.md-label {
-        background-color: #262626;
+        background-color: var(--md-sys-color-surface-variant);
+        color: var(--md-sys-color-primary);
     }
 
     .section-header label.md-label {
-        background-color: #4a3228;
+        background-color: var(--md-sys-color-primary-container);
+        color: var(--md-sys-color-primary);
     }
 
     .section-logistics label.md-label {
-        background-color: #324a2f;
+        background-color: var(--md-sys-color-tertiary-container);
+        color: var(--md-sys-color-tertiary);
     }
 
     .section-content label.md-label {
-        background-color: #4a3a1a;
+        background-color: var(--md-sys-color-quaternary-container);
+        color: var(--md-sys-color-quaternary);
+    }
+
+    details.custom-fields {
+        background-color: #662e46; /* Sytá vínová */
+        border-color: var(--md-sys-color-outline);
+    }
+    
+    /* Oprava hover efektu u Vlastních polí - aby neproblikávala světlá růžová */
+    details.custom-fields summary:hover {
+        background-color: #662e46; /* Stejná jako pozadí, nebo lehce světlejší */
+    }
+
+    .custom-fields-content {
+        background-color: #421a2b;
+    }
+
+    /* Oprava labelů uvnitř Vlastních polí - musí sedět na barvu obsahu (.custom-fields-content) */
+    .custom-fields label.md-label {
+        background-color: #421a2b;
+        color: var(--md-sys-color-primary);
+    }
+    
+    /* Tlačítka v tmavém režimu - méně zářivá */
+    /* Pouze pro primární akce (Uložit, Smazat) chceme tmavý text na světlém tlačítku */
+    button[value="save"],
+    button[value="yes_delete"] {
+        color: #181a1b; /* Tmavý text na světlém tlačítku pro lepší čitelnost */
     }
 }

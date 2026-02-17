@@ -16,7 +16,7 @@ pip3 install flask tinydb
 ### Plány na vylepšení:
 - [ ] vylepšit (spíš udělat nové) CSS
 - [ ] automatické zálohování databáze
-- [ ] automatické přizpůsobení motivu (světlý/tmavý) podle nastavení zařízení
+- [x] automatické přizpůsobení motivu (světlý/tmavý) podle nastavení zařízení
 - [ ] při otevření šablony se nastaví aktuální rok
 - [ ] okamžitý náhled při vyplňování formuláře (pomocí JavaScriptu)
 - [ ] vyskakovací okno prohlížeče při zavírání neuloženého formuláře
