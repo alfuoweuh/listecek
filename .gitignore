@@ -1,3 +1,7 @@
+listecky.json
 listecek_stranky.png
 listecek_tisk.pdf
+
 __pycache__/
+.venv/
+backups/

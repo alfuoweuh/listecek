@@ -4,17 +4,21 @@ from flask import Flask, render_template, request, send_file, redirect, url_for
 from datetime import datetime
 from tinydb import TinyDB, Query
 from generovani import generate
+from backup import auto_backup
 
 # Flask app and TinyDB setup with absolute path for the DB file
 app = Flask(__name__)
 dir_abs_path = os.path.dirname(os.path.abspath(__file__))
-db_abs_path = os.path.join(dir_abs_path, 'listecky.json')
-db = TinyDB(db_abs_path)
+db_path = os.path.join(dir_abs_path, 'listecky.json')
+db = TinyDB(db_path)
 
 
 # Home page
 @app.route('/', methods=['GET', 'POST'])
 def home():
+    # Automatic backup on home page load
+    auto_backup(dir_abs_path, db_path)
+
     # Deleting an entry from DB
     action = request.form.get('action')
     if request.method == 'POST' and action == 'yes_delete':
@@ -52,6 +56,7 @@ def listecek():
             data = db.get(Query().id == id)
             if action == 'template':
                 data['id'] = ''
+                data['rok'] = str(datetime.now().year)
         
         # New empty form with current year
         else:
@@ -152,6 +157,9 @@ def robots():
 @app.route('/googlebaa1f5ca80014a9d.html')
 def google_verification():
     return send_file(os.path.join(dir_abs_path, 'static', 'googlebaa1f5ca80014a9d.html'), mimetype='text/html')
+@app.route('/sitemap.xml')
+def sitemap():
+    return send_file(os.path.join(dir_abs_path, 'static', 'sitemap.xml'), mimetype='application/xml')
 
 # Error handlers
 @app.errorhandler(404)
