@@ -25,9 +25,10 @@ pip install -r requirements.txt # Flask a TinyDB jsou potřeba pouze pro webovou
     - v plánu je totiž vytvořit design znovu od začátku, nejspíš pomocí JavaScriptu, třeba pomocí frameworků Vue nebo React
 
 ### Plány na vylepšení:
+- [x] automatické zálohování databáze
+- [x] při otevření šablony se nastaví aktuální rok
+- [x] udělat web indexovatelný pro vyhledávače (DuckDuckGo, Google)
 - [ ] vylepšit (spíš udělat nový) design webu
-- [ ] automatické zálohování databáze
 - [ ] automatické přizpůsobení motivu (světlý/tmavý) podle nastavení zařízení
-- [ ] při otevření šablony se nastaví aktuální rok
 - [ ] okamžitý náhled při vyplňování formuláře (pomocí JavaScriptu)
 - [ ] vyskakovací okno prohlížeče při zavírání neuloženého formuláře
