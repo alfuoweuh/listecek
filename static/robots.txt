@@ -5,4 +5,4 @@ Disallow: /vyber
 Disallow: /stahnout/
 Disallow: /listecek
 
-Sitemap: https://skarabeus.ctrnactka.cz/sitemap.xml
+Sitemap: https://listecek.eu.pythonanywhere.com/sitemap.xml
